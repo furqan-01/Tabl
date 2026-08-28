@@ -222,77 +222,90 @@ export const FALLBACK_MENU_ITEMS: MenuItem[] = [
  * Falls back safely to pre-defined items on network/DB failure.
  */
 export async function getLiveRestaurantContext(): Promise<RestaurantContext> {
-  try {
+  const fetchWithTimeout = async (): Promise<RestaurantContext> => {
     const clientDb = getFirebaseClientDb();
-    if (clientDb) {
-      // 1. Fetch Menu Collection via Client SDK
-      const menuSnap = await getDocs(collection(clientDb, 'menu'));
-      const menu: MenuItem[] = menuSnap.empty
-        ? FALLBACK_MENU_ITEMS
-        : menuSnap.docs.map((d) => {
+    if (!clientDb) return { menu: FALLBACK_MENU_ITEMS, deals: FALLBACK_DEALS, info: FALLBACK_RESTAURANT_INFO };
+
+    // 1. Fetch Menu Collection via Client SDK
+    const menuSnap = await getDocs(collection(clientDb, 'menu'));
+    const menu: MenuItem[] = menuSnap.empty
+      ? FALLBACK_MENU_ITEMS
+      : menuSnap.docs.map((d) => {
+          const data = d.data();
+          return {
+            id: d.id,
+            name: data.name || 'Unnamed Item',
+            category: data.category || 'Mains',
+            price: typeof data.price === 'number' ? data.price : parseFloat(data.price) || 0,
+            description: data.description || '',
+            ingredients: Array.isArray(data.ingredients) ? data.ingredients : [],
+            allergens: Array.isArray(data.allergens) ? data.allergens : [],
+            isVegetarian: Boolean(data.isVegetarian),
+            isVegan: Boolean(data.isVegan),
+            isGlutenFree: Boolean(data.isGlutenFree),
+            spiceLevel: typeof data.spiceLevel === 'number' ? data.spiceLevel : 0,
+            isAvailable: data.isAvailable !== false,
+          } as MenuItem;
+        });
+
+    // 2. Fetch Deals
+    const dealsSnap = await getDocs(collection(clientDb, 'deals'));
+    const deals: DealOrPromotion[] = dealsSnap.empty
+      ? FALLBACK_DEALS
+      : dealsSnap.docs
+          .map((d) => {
             const data = d.data();
             return {
               id: d.id,
-              name: data.name || 'Unnamed Item',
-              category: data.category || 'Mains',
-              price: typeof data.price === 'number' ? data.price : parseFloat(data.price) || 0,
+              title: data.title || '',
               description: data.description || '',
-              ingredients: Array.isArray(data.ingredients) ? data.ingredients : [],
-              allergens: Array.isArray(data.allergens) ? data.allergens : [],
-              isVegetarian: Boolean(data.isVegetarian),
-              isVegan: Boolean(data.isVegan),
-              isGlutenFree: Boolean(data.isGlutenFree),
-              spiceLevel: typeof data.spiceLevel === 'number' ? data.spiceLevel : 0,
-              isAvailable: data.isAvailable !== false,
-            } as MenuItem;
-          });
+              discountedPrice: data.discountedPrice ? Number(data.discountedPrice) : undefined,
+              conditions: data.conditions || '',
+              isActive: data.isActive !== false,
+            } as DealOrPromotion;
+          })
+          .filter((d) => d.isActive);
 
-      // 2. Fetch Deals
-      const dealsSnap = await getDocs(collection(clientDb, 'deals'));
-      const deals: DealOrPromotion[] = dealsSnap.empty
-        ? FALLBACK_DEALS
-        : dealsSnap.docs
-            .map((d) => {
-              const data = d.data();
-              return {
-                id: d.id,
-                title: data.title || '',
-                description: data.description || '',
-                discountedPrice: data.discountedPrice ? Number(data.discountedPrice) : undefined,
-                conditions: data.conditions || '',
-                isActive: data.isActive !== false,
-              } as DealOrPromotion;
-            })
-            .filter((d) => d.isActive);
+    // 3. Fetch Info
+    const infoSnap = await getDoc(firestoreDoc(clientDb, 'settings', 'info'));
+    const infoData = infoSnap.exists() ? infoSnap.data() : {};
+    const info: RestaurantInfo = {
+      name: infoData.name || FALLBACK_RESTAURANT_INFO.name,
+      openingHours: infoData.openingHours || FALLBACK_RESTAURANT_INFO.openingHours,
+      orderingWorkflow: infoData.orderingWorkflow || FALLBACK_RESTAURANT_INFO.orderingWorkflow,
+      tablePolicy: infoData.tablePolicy || FALLBACK_RESTAURANT_INFO.tablePolicy,
+      currency: infoData.currency || FALLBACK_RESTAURANT_INFO.currency,
+      address: infoData.address || FALLBACK_RESTAURANT_INFO.address,
+      phone: infoData.phone || FALLBACK_RESTAURANT_INFO.phone,
+    };
 
-      // 3. Fetch Info
-      const infoSnap = await getDoc(firestoreDoc(clientDb, 'settings', 'info'));
-      const infoData = infoSnap.exists() ? infoSnap.data() : {};
-      const info: RestaurantInfo = {
-        name: infoData.name || FALLBACK_RESTAURANT_INFO.name,
-        openingHours: infoData.openingHours || FALLBACK_RESTAURANT_INFO.openingHours,
-        orderingWorkflow: infoData.orderingWorkflow || FALLBACK_RESTAURANT_INFO.orderingWorkflow,
-        tablePolicy: infoData.tablePolicy || FALLBACK_RESTAURANT_INFO.tablePolicy,
-        currency: infoData.currency || FALLBACK_RESTAURANT_INFO.currency,
-        address: infoData.address || FALLBACK_RESTAURANT_INFO.address,
-        phone: infoData.phone || FALLBACK_RESTAURANT_INFO.phone,
-      };
-
-      return {
-        menu: menu.length > 0 ? menu : FALLBACK_MENU_ITEMS,
-        deals: deals.length > 0 ? deals : FALLBACK_DEALS,
-        info,
-      };
-    }
-  } catch (clientErr: any) {
-    console.warn('[menuService] Client SDK fetch failed, trying fallback:', clientErr?.message);
-  }
-
-  return {
-    menu: FALLBACK_MENU_ITEMS,
-    deals: FALLBACK_DEALS,
-    info: FALLBACK_RESTAURANT_INFO,
+    return {
+      menu: menu.length > 0 ? menu : FALLBACK_MENU_ITEMS,
+      deals: deals.length > 0 ? deals : FALLBACK_DEALS,
+      info,
+    };
   };
+
+  try {
+    const timeoutPromise = new Promise<RestaurantContext>((resolve) => {
+      setTimeout(() => {
+        resolve({
+          menu: FALLBACK_MENU_ITEMS,
+          deals: FALLBACK_DEALS,
+          info: FALLBACK_RESTAURANT_INFO,
+        });
+      }, 1500);
+    });
+
+    return await Promise.race([fetchWithTimeout(), timeoutPromise]);
+  } catch (clientErr: any) {
+    console.warn('[menuService] Client SDK fetch failed, using fallback:', clientErr?.message);
+    return {
+      menu: FALLBACK_MENU_ITEMS,
+      deals: FALLBACK_DEALS,
+      info: FALLBACK_RESTAURANT_INFO,
+    };
+  }
 }
 
 /**
