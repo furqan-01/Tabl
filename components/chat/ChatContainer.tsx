@@ -197,7 +197,7 @@ function DishCardGrid({
 }) {
   return (
     <div className="grid grid-cols-1 gap-2.5 my-2">
-      {items.map((dish) => (
+      {items?.map((dish) => (
         <DishCard key={dish.id} dish={dish} onAddToCart={onAddToCart} />
       ))}
     </div>
@@ -687,43 +687,43 @@ export default function ChatContainer({
         className="flex-1 min-h-0 h-0 overflow-y-auto overflow-x-hidden p-4 space-y-4 bg-gray-50/60 chat-scroll-area relative"
         style={{ overflow: 'scroll' }}
       >
-        {messages.map((m: any, mIdx) => {
+        {(messages || []).map((m: any, mIdx) => {
           const isUser = m.role === 'user';
-          const isLastMessage = mIdx === messages.length - 1;
+          const isLastMessage = mIdx === (messages || []).length - 1;
           const isStreaming = isGenerating && isLastMessage && !isUser;
 
           // Support both UIMessage parts and legacy fields
-          const parts: any[] = Array.isArray(m.parts) ? m.parts : [];
+          const parts: any[] = Array.isArray(m?.parts) ? m.parts : [];
           const textContent =
-            parts.filter((p) => p.type === 'text').map((p) => p.text).join('') ||
-            (typeof m.content === 'string' ? m.content : '');
+            parts?.filter((p) => p?.type === 'text')?.map((p) => p?.text).join('') ||
+            (typeof m?.content === 'string' ? m.content : '');
 
-          const toolParts = parts.filter(
+          const toolParts = parts?.filter(
             (p) =>
-              p.type === 'tool' ||
-              (typeof p.type === 'string' &&
+              p?.type === 'tool' ||
+              (typeof p?.type === 'string' &&
                 (p.type.startsWith('tool-') ||
                   p.type === 'dynamic-tool' ||
                   p.type === 'tool-invocation' ||
                   p.type === 'tool-call' ||
                   p.type === 'tool-result')) ||
-              p.toolName === 'queryMenu' ||
-              p.name === 'queryMenu'
+              p?.toolName === 'queryMenu' ||
+              p?.name === 'queryMenu'
           );
 
           // Support legacy toolInvocations if present
-          const legacyToolInvocations: any[] = Array.isArray(m.toolInvocations)
+          const legacyToolInvocations: any[] = Array.isArray(m?.toolInvocations)
             ? m.toolInvocations
             : [];
 
-          const hasTools = toolParts.length > 0 || legacyToolInvocations.length > 0;
+          const hasTools = (toolParts || []).length > 0 || (legacyToolInvocations || []).length > 0;
           const isThinking = isStreaming && !textContent && !hasTools;
           const isEmptyAssistant = !isUser && !isStreaming && !textContent && !hasTools;
 
           return (
             <article
-              key={m.id || mIdx}
-              id={`chat-message-${m.id || mIdx}`}
+              key={m?.id || mIdx}
+              id={`chat-message-${m?.id || mIdx}`}
               className={`flex items-start gap-2.5 ${isUser ? 'flex-row-reverse' : 'flex-row'}`}
             >
               {/* Avatar Icon */}
@@ -775,13 +775,13 @@ export default function ChatContainer({
                 ) : (
                   <div className="space-y-2">
                     {/* Render UIMessage Tool Parts */}
-                    {toolParts.map((tp, tpIdx) => (
+                    {toolParts?.map((tp, tpIdx) => (
                       <ToolInvocationRenderer
-                        key={tp.toolCallId || tpIdx}
-                        toolState={tp.state || 'output-available'}
-                        toolInput={tp.input || tp.args}
-                        toolOutput={tp.output || tp.result}
-                        errorText={tp.errorText}
+                        key={tp?.toolCallId || tpIdx}
+                        toolState={tp?.state || 'output-available'}
+                        toolInput={tp?.input || tp?.args}
+                        toolOutput={tp?.output || tp?.result}
+                        errorText={tp?.errorText}
                         onAddToCart={handleAddToCartItem}
                         onResetFilters={handleResetFilters}
                         onClose={onClose}
@@ -789,12 +789,12 @@ export default function ChatContainer({
                     ))}
 
                     {/* Render Legacy Tool Invocations */}
-                    {legacyToolInvocations.map((ti, tiIdx) => (
+                    {legacyToolInvocations?.map((ti, tiIdx) => (
                       <ToolInvocationRenderer
-                        key={ti.toolCallId || tiIdx}
-                        toolState={ti.state}
-                        toolInput={ti.args}
-                        toolOutput={ti.result}
+                        key={ti?.toolCallId || tiIdx}
+                        toolState={ti?.state}
+                        toolInput={ti?.args}
+                        toolOutput={ti?.result}
                         onAddToCart={handleAddToCartItem}
                         onResetFilters={handleResetFilters}
                         onClose={onClose}
