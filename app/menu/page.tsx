@@ -24,6 +24,7 @@ import {
 } from 'lucide-react';
 import { MenuItem, DealOrPromotion, RestaurantInfo } from '@/types/restaurant';
 import ChatContainer from '@/components/chat/ChatContainer';
+import FloatingConciergeOrb from '@/components/3d/ConciergeOrbButton';
 import { addToCart, getStoredCart, getStoredTable, setStoredTable } from '@/lib/cart';
 
 export default function MenuPage() {
@@ -213,21 +214,6 @@ export default function MenuPage() {
                 ))}
               </select>
             </div>
-
-            {/* AI Assistant Quick Toggle Header Button */}
-            <button
-              type="button"
-              id="header-toggle-ai-btn"
-              onClick={() => setIsChatOpen(!isChatOpen)}
-              className={`inline-flex items-center gap-1.5 rounded-lg px-3.5 py-1.5 text-xs font-semibold transition-all shadow-xs ${
-                isChatOpen
-                  ? 'bg-gray-900 text-white'
-                  : 'bg-white border border-gray-300 text-gray-900 hover:bg-gray-50'
-              }`}
-            >
-              <Sparkles className="w-3.5 h-3.5 text-amber-500" />
-              <span>{isChatOpen ? 'Close AI Assistant' : 'Ask AI Assistant'}</span>
-            </button>
           </div>
         </div>
       </div>
@@ -356,25 +342,34 @@ export default function MenuPage() {
               </div>
             </div>
 
-            {/* AI Assistant Quick Prompt Strip */}
+            {/* AI Assistant Quick Prompt Strip with 3D Orb Feature */}
             <div
               id="menu-ai-banner"
-              className="mb-6 rounded-xl border border-gray-200 bg-white p-3.5 flex flex-col sm:flex-row sm:items-center justify-between gap-3 shadow-2xs"
+              className="mb-6 rounded-2xl border border-amber-200/80 bg-gradient-to-r from-amber-50/70 via-white to-sky-50/50 p-4 flex flex-col sm:flex-row sm:items-center justify-between gap-4 shadow-xs"
             >
               <div className="flex items-center gap-3">
-                <div className="w-8 h-8 rounded-lg bg-amber-50 text-amber-600 flex items-center justify-center flex-shrink-0">
-                  <Sparkles className="w-4 h-4" />
-                </div>
+                <FloatingConciergeOrb
+                  variant="inline"
+                  onClick={() => setIsChatOpen(true)}
+                  showBadge={false}
+                />
                 <div>
-                  <p className="text-xs font-bold text-gray-900">Need personal dish recommendations or allergen check?</p>
-                  <p className="text-[11px] text-gray-500">Ask the Tabl AI Assistant for budget combos, dietary substitutes, and live dish availability.</p>
+                  <div className="flex items-center gap-2">
+                    <span className="inline-flex items-center gap-1 rounded-full bg-amber-100 px-2 py-0.5 text-[10px] font-extrabold text-amber-800 tracking-wide uppercase">
+                      3D AI Concierge
+                    </span>
+                    <p className="text-xs font-bold text-gray-900">Need dish recommendations or allergen check?</p>
+                  </div>
+                  <p className="text-[11px] text-gray-600 mt-0.5">
+                    Click the 3D Orb or Ask Tabl Assistant for budget combos, chef specialties, and live dish pairing.
+                  </p>
                 </div>
               </div>
               <button
                 type="button"
                 id="banner-open-ai-btn"
                 onClick={() => setIsChatOpen(true)}
-                className="inline-flex items-center justify-center gap-1.5 rounded-lg bg-gray-900 px-3 py-1.5 text-xs font-semibold text-white hover:bg-black transition-colors shadow-2xs whitespace-nowrap"
+                className="inline-flex items-center justify-center gap-1.5 rounded-xl bg-gray-900 hover:bg-black px-4 py-2 text-xs font-bold text-white transition-all shadow-xs hover:scale-105 active:scale-95 whitespace-nowrap"
               >
                 <Sparkles className="w-3.5 h-3.5 text-amber-400" />
                 <span>Open Assistant</span>
@@ -582,22 +577,6 @@ export default function MenuPage() {
             />
           </aside>
         </div>
-      )}
-
-      {/* Floating Action Trigger Button for AI Assistant */}
-      {!isChatOpen && (
-        <button
-          type="button"
-          id="floating-assistant-btn"
-          onClick={() => setIsChatOpen(true)}
-          className="fixed bottom-6 right-6 z-40 flex items-center gap-2.5 rounded-full bg-gray-900 px-4 py-3 text-sm font-semibold text-white shadow-xl hover:bg-black transition-all hover:scale-105 border border-gray-700"
-        >
-          <div className="relative flex items-center justify-center">
-            <Sparkles className="w-5 h-5 text-amber-400" />
-            <span className="absolute -top-1 -right-1 w-2.5 h-2.5 bg-emerald-500 rounded-full border-2 border-gray-900" />
-          </div>
-          <span>Ask Tabl Concierge</span>
-        </button>
       )}
 
       {/* Floating Bottom Cart Bar (if cart has items) */}
