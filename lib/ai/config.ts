@@ -10,10 +10,9 @@ import { createGoogleGenerativeAI } from '@ai-sdk/google';
  * Features a resilient model cascade with fallback handling.
  */
 
-// Model candidates sorted by quota limits, latency, quality, and availability
+// Model candidates configured for high speed, low latency, and efficient token usage
 export const GEMINI_CHAT_MODELS = [
-  'gemini-2.5-flash',
-  'gemini-2.5-flash-lite',
+  'gemini-3.5-flash-lite',
 ] as const;
 
 // Hyperparameters for menu recommendation and deterministic reasoning
