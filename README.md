@@ -5,8 +5,12 @@
 Tabl is a next-generation contactless dining application featuring real-time menu management, a Kitchen Display System (KDS), and an interactive 3D AI Gastronomy Concierge powered by Gemini.
 
 ## 📸 Screenshots
-*(Add 2-3 screenshots here: One of the Hero section with 3D Orb, one of the Menu Catalog, and one of the AI Chat Drawer)*
-![Hero Section](./public/hero-screenshot.png) 
+<img width="960" height="514" alt="image" src="https://github.com/user-attachments/assets/5ecd4e54-f602-4f7f-9ff1-b967bad8e5bd" />
+
+<img width="960" height="514" alt="image" src="https://github.com/user-attachments/assets/5ff4809c-cfcc-4671-84b6-165d5aca93b4" />
+
+<img width="960" height="451" alt="image" src="https://github.com/user-attachments/assets/3fac7412-0fb7-4c54-a3e8-6317ab14b809" />
+
 
 ## 🏗️ Architecture Overview
 *   **Frontend:** Next.js (App Router), React, Tailwind CSS, Lucide Icons.
