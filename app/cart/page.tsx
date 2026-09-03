@@ -122,7 +122,7 @@ export default function CartPage() {
           </p>
 
           <div className="mt-8 rounded-2xl bg-gray-50 p-6 text-left border border-gray-200/80">
-            <h2 className="text-xs font-bold uppercase tracking-wider text-gray-500 mb-4">
+            <h2 className="text-xs font-bold uppercase tracking-wider text-gray-600 mb-4">
               Order Summary
             </h2>
             <ul className="divide-y divide-gray-200">
@@ -157,14 +157,16 @@ export default function CartPage() {
           <div className="mt-8 flex flex-col sm:flex-row items-center justify-center gap-3">
             <Link
               href="/menu"
-              className="w-full sm:w-auto inline-flex items-center justify-center gap-2 rounded-xl bg-gray-900 px-6 py-3 text-xs font-bold text-white hover:bg-gray-800 transition-colors shadow-xs"
+              aria-label="Return to menu"
+              className="w-full sm:w-auto inline-flex items-center justify-center gap-2 rounded-xl bg-gray-900 px-6 py-3 text-xs font-bold text-white hover:bg-gray-800 transition-colors shadow-xs focus:outline-none focus:ring-2 focus:ring-gray-900 focus:ring-offset-2"
             >
               <ArrowLeft className="w-4 h-4" />
               Return to Menu
             </Link>
             <Link
               href="/admin/kds"
-              className="w-full sm:w-auto inline-flex items-center justify-center gap-2 rounded-xl border border-gray-300 bg-white px-6 py-3 text-xs font-bold text-gray-700 hover:bg-gray-50 transition-colors"
+              aria-label="View Kitchen Display Screen"
+              className="w-full sm:w-auto inline-flex items-center justify-center gap-2 rounded-xl border border-gray-300 bg-white px-6 py-3 text-xs font-bold text-gray-700 hover:bg-gray-50 transition-colors focus:outline-none focus:ring-2 focus:ring-gray-900 focus:ring-offset-2"
             >
               <ChefHat className="w-4 h-4 text-orange-600" />
               View Kitchen Screen (KDS)
@@ -183,7 +185,8 @@ export default function CartPage() {
           <div className="flex items-center gap-2">
             <Link
               href="/menu"
-              className="inline-flex items-center gap-1 text-xs font-semibold text-gray-500 hover:text-gray-900"
+              aria-label="Back to restaurant menu"
+              className="inline-flex items-center gap-1 text-xs font-semibold text-gray-600 hover:text-gray-900 focus:outline-none focus:ring-2 focus:ring-gray-900 rounded px-1"
             >
               <ArrowLeft className="w-3.5 h-3.5" /> Back to Menu
             </Link>
@@ -195,15 +198,19 @@ export default function CartPage() {
 
         <div className="flex items-center gap-2">
           <div className="flex items-center gap-1.5 rounded-lg border border-gray-200 bg-white px-3 py-1.5 shadow-2xs">
-            <Utensils className="w-3.5 h-3.5 text-gray-500" />
-            <span className="text-xs font-semibold text-gray-700">Table:</span>
+            <Utensils className="w-3.5 h-3.5 text-gray-600" />
+            <label htmlFor="cart-table-select" className="text-xs font-semibold text-gray-700">
+              Table:
+            </label>
             <select
+              id="cart-table-select"
+              aria-label="Select dining table number"
               value={tableNumber}
               onChange={(e) => {
                 setTableNumber(e.target.value);
                 setStoredTable(e.target.value);
               }}
-              className="bg-transparent text-xs font-bold text-gray-900 focus:outline-none cursor-pointer"
+              className="bg-transparent text-xs font-bold text-gray-900 focus:outline-none focus:ring-2 focus:ring-gray-900 focus:rounded cursor-pointer"
             >
               {[1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12].map((num) => (
                 <option key={num} value={String(num)}>
@@ -216,11 +223,12 @@ export default function CartPage() {
           {cart.length > 0 && (
             <button
               type="button"
+              aria-label="Clear all items from cart"
               onClick={() => {
                 clearCart();
                 loadCart();
               }}
-              className="inline-flex items-center gap-1.5 rounded-lg border border-rose-200 bg-rose-50 px-3 py-1.5 text-xs font-semibold text-rose-700 hover:bg-rose-100 transition-colors"
+              className="inline-flex items-center gap-1.5 rounded-lg border border-rose-200 bg-rose-50 px-3 py-1.5 text-xs font-semibold text-rose-700 hover:bg-rose-100 transition-colors focus:outline-none focus:ring-2 focus:ring-rose-500 focus:ring-offset-2"
             >
               <Trash2 className="w-3.5 h-3.5" />
               Clear Cart
@@ -231,14 +239,15 @@ export default function CartPage() {
 
       {cart.length === 0 ? (
         <div className="rounded-3xl border border-dashed border-gray-300 bg-white p-12 text-center">
-          <ShoppingBag className="w-12 h-12 text-gray-300 mx-auto mb-3" />
+          <ShoppingBag className="w-12 h-12 text-gray-400 mx-auto mb-3" />
           <h2 className="text-lg font-bold text-gray-900">Your cart is empty</h2>
-          <p className="text-xs text-gray-500 mt-1 max-w-sm mx-auto">
+          <p className="text-xs text-gray-600 mt-1 max-w-sm mx-auto">
             Browse our menu or consult the AI Assistant for recommendations and add items to your table order.
           </p>
           <Link
             href="/menu"
-            className="mt-6 inline-flex items-center gap-2 rounded-xl bg-gray-900 px-5 py-2.5 text-xs font-bold text-white hover:bg-gray-800 transition-colors shadow-xs"
+            aria-label="Explore menu and combo deals"
+            className="mt-6 inline-flex items-center gap-2 rounded-xl bg-gray-900 px-5 py-2.5 text-xs font-bold text-white hover:bg-gray-800 transition-colors shadow-xs focus:outline-none focus:ring-2 focus:ring-gray-900 focus:ring-offset-2"
           >
             <Utensils className="w-4 h-4" />
             Explore Menu & Combos
@@ -267,7 +276,7 @@ export default function CartPage() {
                         </span>
                       </div>
                       {item.notes && (
-                        <p className="text-xs text-amber-700 bg-amber-50 rounded px-2 py-0.5 mt-1 inline-block">
+                        <p className="text-xs text-amber-800 bg-amber-50 rounded px-2 py-0.5 mt-1 inline-block">
                           Note: {item.notes}
                         </p>
                       )}
@@ -278,8 +287,9 @@ export default function CartPage() {
                       <div className="flex items-center rounded-lg border border-gray-200 bg-gray-50 p-1">
                         <button
                           type="button"
+                          aria-label={`Decrease quantity of ${item.name}`}
                           onClick={() => handleQty(item.id, item.quantity - 1)}
-                          className="w-6 h-6 rounded flex items-center justify-center text-gray-600 hover:bg-white transition-colors"
+                          className="w-6 h-6 rounded flex items-center justify-center text-gray-700 hover:bg-white transition-colors focus:outline-none focus:ring-2 focus:ring-gray-900"
                         >
                           <Minus className="w-3 h-3" />
                         </button>
@@ -288,8 +298,9 @@ export default function CartPage() {
                         </span>
                         <button
                           type="button"
+                          aria-label={`Increase quantity of ${item.name}`}
                           onClick={() => handleQty(item.id, item.quantity + 1)}
-                          className="w-6 h-6 rounded flex items-center justify-center text-gray-600 hover:bg-white transition-colors"
+                          className="w-6 h-6 rounded flex items-center justify-center text-gray-700 hover:bg-white transition-colors focus:outline-none focus:ring-2 focus:ring-gray-900"
                         >
                           <Plus className="w-3 h-3" />
                         </button>
@@ -303,8 +314,9 @@ export default function CartPage() {
                       {/* Remove Button */}
                       <button
                         type="button"
+                        aria-label={`Remove ${item.name} from cart`}
                         onClick={() => handleRemove(item.id)}
-                        className="p-1.5 text-gray-400 hover:text-rose-600 transition-colors"
+                        className="p-1.5 text-gray-500 hover:text-rose-600 transition-colors focus:outline-none focus:ring-2 focus:ring-rose-500 rounded"
                         title="Remove item"
                       >
                         <Trash2 className="w-4 h-4" />
@@ -323,10 +335,11 @@ export default function CartPage() {
               <textarea
                 id="special-notes"
                 rows={2}
+                aria-label="Special kitchen instructions or allergy notes"
                 value={specialNotes}
                 onChange={(e) => setSpecialNotes(e.target.value)}
                 placeholder="e.g. Extra napkins, dressing on the side, no onions..."
-                className="w-full rounded-xl border border-gray-300 px-3.5 py-2.5 text-sm text-gray-900 placeholder:text-gray-400 focus:border-gray-900 focus:ring-1 focus:ring-gray-900 focus:outline-none transition-colors"
+                className="w-full rounded-xl border border-gray-300 px-3.5 py-2.5 text-sm text-gray-900 placeholder:text-gray-500 focus:border-gray-900 focus:ring-2 focus:ring-gray-900 focus:outline-none transition-colors"
               />
             </div>
           </div>
@@ -339,11 +352,11 @@ export default function CartPage() {
               </h2>
 
               <div className="space-y-3 text-sm">
-                <div className="flex justify-between text-gray-600">
+                <div className="flex justify-between text-gray-700">
                   <span>Subtotal</span>
                   <span className="font-mono font-medium text-gray-900">Rs. {subtotal.toFixed(0)}</span>
                 </div>
-                <div className="flex justify-between text-gray-600">
+                <div className="flex justify-between text-gray-700">
                   <span>GST & Service (5%)</span>
                   <span className="font-mono font-medium text-gray-900">Rs. {tax.toFixed(0)}</span>
                 </div>
@@ -355,7 +368,7 @@ export default function CartPage() {
               </div>
 
               {error && (
-                <div className="mt-4 rounded-xl bg-rose-50 border border-rose-200 p-3 text-xs text-rose-700">
+                <div className="mt-4 rounded-xl bg-rose-50 border border-rose-200 p-3 text-xs text-rose-800">
                   {error}
                 </div>
               )}
@@ -363,9 +376,10 @@ export default function CartPage() {
               <button
                 type="button"
                 id="place-order-btn"
+                aria-label={`Confirm and place order for Table ${tableNumber}`}
                 disabled={placingOrder || cart.length === 0}
                 onClick={handlePlaceOrder}
-                className="mt-6 w-full rounded-xl bg-gray-900 py-3 px-4 text-sm font-bold text-white shadow-xs hover:bg-gray-800 transition-colors disabled:opacity-50 flex items-center justify-center gap-2"
+                className="mt-6 w-full rounded-xl bg-gray-900 py-3 px-4 text-sm font-bold text-white shadow-xs hover:bg-gray-800 transition-colors disabled:opacity-50 flex items-center justify-center gap-2 focus:outline-none focus:ring-2 focus:ring-gray-900 focus:ring-offset-2"
               >
                 {placingOrder ? (
                   <>
@@ -380,8 +394,8 @@ export default function CartPage() {
                 )}
               </button>
 
-              <div className="mt-4 rounded-xl bg-gray-50 border border-gray-200/80 p-3 text-[11px] text-gray-600 flex items-start gap-2">
-                <Info className="w-4 h-4 text-gray-500 flex-shrink-0 mt-0.5" />
+              <div className="mt-4 rounded-xl bg-gray-50 border border-gray-200/80 p-3 text-xs text-gray-700 flex items-start gap-2">
+                <Info className="w-4 h-4 text-gray-600 flex-shrink-0 mt-0.5" />
                 <span>
                   Orders are dispatched directly to the chef. You will pay your waiter at table {tableNumber} after your meal.
                 </span>

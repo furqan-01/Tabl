@@ -198,11 +198,12 @@ export default function MenuManagementPage() {
           <Link
             id="back-to-admin-btn"
             href="/admin"
-            className="inline-flex items-center gap-1.5 text-xs font-semibold text-gray-600 hover:text-gray-900 bg-gray-100 hover:bg-gray-200 px-3 py-1.5 rounded-lg transition-colors"
+            aria-label="Back to staff hub"
+            className="inline-flex items-center gap-1.5 text-xs font-semibold text-gray-700 hover:text-gray-900 bg-gray-100 hover:bg-gray-200 px-3 py-1.5 rounded-lg transition-colors focus:outline-none focus:ring-2 focus:ring-gray-900 focus:ring-offset-2"
           >
             <ArrowLeft className="w-3.5 h-3.5" /> Staff Hub
           </Link>
-          <span className="text-gray-300">/</span>
+          <span className="text-gray-400">/</span>
           <h1 id="manage-title" className="text-xl sm:text-2xl font-bold tracking-tight text-gray-900">
             Inventory & 86 Control
           </h1>
@@ -212,7 +213,8 @@ export default function MenuManagementPage() {
           <Link
             id="nav-to-kds"
             href="/admin/kds"
-            className="inline-flex items-center gap-1.5 rounded-lg border border-gray-300 bg-white px-3.5 py-2 text-xs font-semibold text-gray-700 hover:bg-gray-50 transition-colors shadow-2xs"
+            aria-label="Navigate to Kitchen Display Screen"
+            className="inline-flex items-center gap-1.5 rounded-lg border border-gray-300 bg-white px-3.5 py-2 text-xs font-semibold text-gray-700 hover:bg-gray-50 transition-colors shadow-2xs focus:outline-none focus:ring-2 focus:ring-gray-900 focus:ring-offset-2"
           >
             <ChefHat className="w-4 h-4 text-orange-600" />
             Kitchen Display (KDS)
@@ -220,8 +222,9 @@ export default function MenuManagementPage() {
           <button
             type="button"
             id="open-add-dish-btn"
+            aria-label="Open dialog to add new dish"
             onClick={() => setShowAddModal(true)}
-            className="inline-flex items-center gap-1.5 rounded-lg bg-gray-900 px-3.5 py-2 text-xs font-semibold text-white hover:bg-gray-800 transition-colors shadow-xs"
+            className="inline-flex items-center gap-1.5 rounded-lg bg-gray-900 px-3.5 py-2 text-xs font-semibold text-white hover:bg-gray-800 transition-colors shadow-xs focus:outline-none focus:ring-2 focus:ring-gray-900 focus:ring-offset-2"
           >
             <Plus className="w-4 h-4" />
             Add New Dish
@@ -229,8 +232,9 @@ export default function MenuManagementPage() {
           <button
             type="button"
             id="open-scrape-modal-btn"
+            aria-label="Open dialog to sync menu from URL"
             onClick={() => setShowScrapeModal(true)}
-            className="inline-flex items-center gap-1.5 rounded-lg border border-gray-300 bg-white px-3.5 py-2 text-xs font-semibold text-gray-700 hover:bg-gray-50 transition-colors shadow-2xs"
+            className="inline-flex items-center gap-1.5 rounded-lg border border-gray-300 bg-white px-3.5 py-2 text-xs font-semibold text-gray-700 hover:bg-gray-50 transition-colors shadow-2xs focus:outline-none focus:ring-2 focus:ring-gray-900 focus:ring-offset-2"
           >
             <Globe className="w-4 h-4 text-blue-600" />
             Sync URL
@@ -242,25 +246,29 @@ export default function MenuManagementPage() {
       <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4 mb-6">
         {/* Search */}
         <div className="relative flex-1 max-w-md">
-          <Search className="w-4 h-4 absolute left-3.5 top-3 text-gray-400 pointer-events-none" />
+          <Search className="w-4 h-4 absolute left-3.5 top-3 text-gray-500 pointer-events-none" />
           <input
             type="text"
             id="inventory-search-input"
+            aria-label="Search menu items by name or ingredients"
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
             placeholder="Search menu items by name or ingredients..."
-            className="w-full rounded-xl border border-gray-300 pl-10 pr-4 py-2 text-sm text-gray-900 placeholder:text-gray-400 focus:border-gray-900 focus:ring-1 focus:ring-gray-900 focus:outline-none bg-white"
+            className="w-full rounded-xl border border-gray-300 pl-10 pr-4 py-2 text-sm text-gray-900 placeholder:text-gray-500 focus:border-gray-900 focus:ring-2 focus:ring-gray-900 focus:outline-none bg-white"
           />
         </div>
 
         {/* Category Pills */}
-        <div className="flex items-center gap-1.5 overflow-x-auto pb-1 sm:pb-0">
+        <div className="flex items-center gap-1.5 overflow-x-auto pb-1 sm:pb-0" role="tablist" aria-label="Filter menu items by category">
           {categories.map((cat) => (
             <button
               key={cat}
               type="button"
+              role="tab"
+              aria-selected={selectedCategory === cat}
+              aria-label={`Filter inventory by ${cat}`}
               onClick={() => setSelectedCategory(cat)}
-              className={`px-3 py-1.5 rounded-lg text-xs font-medium whitespace-nowrap transition-colors ${
+              className={`px-3 py-1.5 rounded-lg text-xs font-medium whitespace-nowrap transition-colors focus:outline-none focus:ring-2 focus:ring-gray-900 focus:ring-offset-2 ${
                 selectedCategory === cat
                   ? 'bg-gray-900 text-white shadow-2xs'
                   : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
@@ -278,7 +286,7 @@ export default function MenuManagementPage() {
         className="rounded-2xl border border-gray-200 bg-white shadow-xs overflow-hidden"
       >
         <div className="overflow-x-auto">
-          <table className="w-full text-left text-sm text-gray-600">
+          <table className="w-full text-left text-sm text-gray-700" aria-label="Restaurant inventory items">
             <thead className="border-b border-gray-200 bg-gray-50/80 text-xs uppercase font-semibold text-gray-700 tracking-wider">
               <tr>
                 <th scope="col" className="px-6 py-4">Item & Description</th>
@@ -292,14 +300,14 @@ export default function MenuManagementPage() {
             <tbody className="divide-y divide-gray-100">
               {loading ? (
                 <tr>
-                  <td colSpan={6} className="px-6 py-12 text-center text-sm text-gray-500">
-                    <RefreshCw className="w-5 h-5 animate-spin mx-auto mb-2 text-gray-400" />
+                  <td colSpan={6} className="px-6 py-12 text-center text-sm text-gray-600">
+                    <RefreshCw className="w-5 h-5 animate-spin mx-auto mb-2 text-gray-500" />
                     Loading catalog items...
                   </td>
                 </tr>
               ) : filteredItems.length === 0 ? (
                 <tr>
-                  <td colSpan={6} className="px-6 py-12 text-center text-sm text-gray-500">
+                  <td colSpan={6} className="px-6 py-12 text-center text-sm text-gray-600">
                     No matching items found.
                   </td>
                 </tr>
@@ -315,7 +323,7 @@ export default function MenuManagementPage() {
                     <td className="px-6 py-4">
                       <div className="font-semibold text-gray-900">{item.name}</div>
                       {item.description && (
-                        <p className="text-xs text-gray-500 line-clamp-1 max-w-sm mt-0.5">
+                        <p className="text-xs text-gray-600 line-clamp-1 max-w-sm mt-0.5">
                           {item.description}
                         </p>
                       )}
@@ -331,22 +339,22 @@ export default function MenuManagementPage() {
                     <td className="px-6 py-4">
                       <div className="flex items-center gap-1.5">
                         {item.isVegetarian && (
-                          <span className="text-[10px] font-bold uppercase bg-emerald-100 text-emerald-800 px-1.5 py-0.5 rounded">
+                          <span className="text-xs font-bold uppercase bg-emerald-100 text-emerald-800 px-1.5 py-0.5 rounded">
                             Veg
                           </span>
                         )}
                         {item.isVegan && (
-                          <span className="text-[10px] font-bold uppercase bg-green-100 text-green-800 px-1.5 py-0.5 rounded">
+                          <span className="text-xs font-bold uppercase bg-green-100 text-green-800 px-1.5 py-0.5 rounded">
                             Vegan
                           </span>
                         )}
                         {item.spiceLevel ? (
-                          <span className="text-[10px] font-bold flex items-center bg-amber-100 text-amber-800 px-1.5 py-0.5 rounded">
+                          <span className="text-xs font-bold flex items-center bg-amber-100 text-amber-800 px-1.5 py-0.5 rounded">
                             <Flame className="w-3 h-3 mr-0.5 text-red-500" /> {item.spiceLevel}
                           </span>
                         ) : null}
                         {!item.isVegetarian && !item.isVegan && !item.spiceLevel && (
-                          <span className="text-xs text-gray-400">—</span>
+                          <span className="text-xs text-gray-500">—</span>
                         )}
                       </div>
                     </td>
@@ -373,9 +381,10 @@ export default function MenuManagementPage() {
                       <button
                         type="button"
                         id={`toggle-item-${item.id}`}
+                        aria-label={item.isAvailable ? `Mark ${item.name} as out of stock (86 item)` : `Restore ${item.name} to available in stock`}
                         disabled={togglingId === item.id}
                         onClick={() => handleToggleAvailability(item)}
-                        className={`rounded-lg px-3.5 py-1.5 text-xs font-semibold transition-all shadow-2xs ${
+                        className={`rounded-lg px-3.5 py-1.5 text-xs font-semibold transition-all shadow-2xs focus:outline-none focus:ring-2 focus:ring-gray-900 focus:ring-offset-2 ${
                           item.isAvailable
                             ? 'border border-rose-200 bg-white text-rose-700 hover:bg-rose-50'
                             : 'border border-emerald-200 bg-white text-emerald-700 hover:bg-emerald-50'
@@ -398,14 +407,15 @@ export default function MenuManagementPage() {
 
       {/* Add New Dish Modal */}
       {showAddModal && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 p-4">
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 p-4" role="dialog" aria-modal="true" aria-labelledby="add-dish-modal-title">
           <div className="w-full max-w-lg rounded-2xl bg-white p-6 shadow-xl">
             <div className="flex items-center justify-between border-b border-gray-100 pb-3 mb-4">
-              <h3 className="text-lg font-bold text-gray-900">Add Menu Item</h3>
+              <h3 id="add-dish-modal-title" className="text-lg font-bold text-gray-900">Add Menu Item</h3>
               <button
                 type="button"
+                aria-label="Close add menu item modal"
                 onClick={() => setShowAddModal(false)}
-                className="text-gray-400 hover:text-gray-600 text-sm font-medium"
+                className="text-gray-500 hover:text-gray-700 text-sm font-medium focus:outline-none focus:ring-2 focus:ring-gray-900 rounded p-1"
               >
                 ✕
               </button>
@@ -413,24 +423,26 @@ export default function MenuManagementPage() {
 
             <form onSubmit={handleAddDish} className="space-y-4">
               <div>
-                <label className="block text-xs font-semibold text-gray-700 mb-1">Item Name</label>
+                <label htmlFor="add-dish-name" className="block text-xs font-semibold text-gray-700 mb-1">Item Name</label>
                 <input
+                  id="add-dish-name"
                   type="text"
                   required
                   value={newDishName}
                   onChange={(e) => setNewDishName(e.target.value)}
                   placeholder="e.g. Garlic Butter Naan or Chicken Tikka"
-                  className="w-full rounded-lg border border-gray-300 px-3 py-2 text-sm focus:border-gray-900 focus:outline-none"
+                  className="w-full rounded-lg border border-gray-300 px-3 py-2 text-sm text-gray-900 placeholder:text-gray-500 focus:border-gray-900 focus:ring-2 focus:ring-gray-900 focus:outline-none"
                 />
               </div>
 
               <div className="grid grid-cols-2 gap-3">
                 <div>
-                  <label className="block text-xs font-semibold text-gray-700 mb-1">Category</label>
+                  <label htmlFor="add-dish-category" className="block text-xs font-semibold text-gray-700 mb-1">Category</label>
                   <select
+                    id="add-dish-category"
                     value={newDishCategory}
                     onChange={(e) => setNewDishCategory(e.target.value)}
-                    className="w-full rounded-lg border border-gray-300 px-3 py-2 text-sm focus:border-gray-900 focus:outline-none"
+                    className="w-full rounded-lg border border-gray-300 px-3 py-2 text-sm text-gray-900 focus:border-gray-900 focus:ring-2 focus:ring-gray-900 focus:outline-none"
                   >
                     <option value="Mains">Mains</option>
                     <option value="Appetizers">Appetizers</option>
@@ -442,55 +454,57 @@ export default function MenuManagementPage() {
                 </div>
 
                 <div>
-                  <label className="block text-xs font-semibold text-gray-700 mb-1">Price (Rs.)</label>
+                  <label htmlFor="add-dish-price" className="block text-xs font-semibold text-gray-700 mb-1">Price (Rs.)</label>
                   <input
+                    id="add-dish-price"
                     type="number"
                     step="1"
                     required
                     value={newDishPrice}
                     onChange={(e) => setNewDishPrice(e.target.value)}
                     placeholder="e.g. 450"
-                    className="w-full rounded-lg border border-gray-300 px-3 py-2 text-sm focus:border-gray-900 focus:outline-none"
+                    className="w-full rounded-lg border border-gray-300 px-3 py-2 text-sm text-gray-900 placeholder:text-gray-500 focus:border-gray-900 focus:ring-2 focus:ring-gray-900 focus:outline-none"
                   />
                 </div>
               </div>
 
               <div>
-                <label className="block text-xs font-semibold text-gray-700 mb-1">Description</label>
+                <label htmlFor="add-dish-desc" className="block text-xs font-semibold text-gray-700 mb-1">Description</label>
                 <textarea
+                  id="add-dish-desc"
                   rows={2}
                   value={newDishDesc}
                   onChange={(e) => setNewDishDesc(e.target.value)}
                   placeholder="Fresh ingredients, prep style, and flavor notes..."
-                  className="w-full rounded-lg border border-gray-300 px-3 py-2 text-sm focus:border-gray-900 focus:outline-none"
+                  className="w-full rounded-lg border border-gray-300 px-3 py-2 text-sm text-gray-900 placeholder:text-gray-500 focus:border-gray-900 focus:ring-2 focus:ring-gray-900 focus:outline-none"
                 />
               </div>
 
               <div className="flex flex-wrap gap-4 pt-1">
-                <label className="inline-flex items-center text-xs text-gray-700">
+                <label className="inline-flex items-center text-xs text-gray-700 cursor-pointer">
                   <input
                     type="checkbox"
                     checked={newDishVeg}
                     onChange={(e) => setNewDishVeg(e.target.checked)}
-                    className="rounded text-gray-900 mr-2"
+                    className="rounded text-gray-900 mr-2 focus:ring-2 focus:ring-gray-900"
                   />
                   Vegetarian
                 </label>
-                <label className="inline-flex items-center text-xs text-gray-700">
+                <label className="inline-flex items-center text-xs text-gray-700 cursor-pointer">
                   <input
                     type="checkbox"
                     checked={newDishVegan}
                     onChange={(e) => setNewDishVegan(e.target.checked)}
-                    className="rounded text-gray-900 mr-2"
+                    className="rounded text-gray-900 mr-2 focus:ring-2 focus:ring-gray-900"
                   />
                   Vegan
                 </label>
-                <label className="inline-flex items-center text-xs text-gray-700">
+                <label className="inline-flex items-center text-xs text-gray-700 cursor-pointer">
                   <input
                     type="checkbox"
                     checked={newDishGlutenFree}
                     onChange={(e) => setNewDishGlutenFree(e.target.checked)}
-                    className="rounded text-gray-900 mr-2"
+                    className="rounded text-gray-900 mr-2 focus:ring-2 focus:ring-gray-900"
                   />
                   Gluten Free
                 </label>
@@ -500,14 +514,14 @@ export default function MenuManagementPage() {
                 <button
                   type="button"
                   onClick={() => setShowAddModal(false)}
-                  className="rounded-lg border border-gray-300 px-4 py-2 text-xs font-semibold text-gray-700 hover:bg-gray-50"
+                  className="rounded-lg border border-gray-300 px-4 py-2 text-xs font-semibold text-gray-700 hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-gray-900"
                 >
                   Cancel
                 </button>
                 <button
                   type="submit"
                   disabled={addingDish}
-                  className="rounded-lg bg-gray-900 px-4 py-2 text-xs font-semibold text-white hover:bg-gray-800 disabled:opacity-50"
+                  className="rounded-lg bg-gray-900 px-4 py-2 text-xs font-semibold text-white hover:bg-gray-800 disabled:opacity-50 focus:outline-none focus:ring-2 focus:ring-gray-900 focus:ring-offset-2"
                 >
                   {addingDish ? 'Saving...' : 'Add to Menu'}
                 </button>
@@ -519,38 +533,40 @@ export default function MenuManagementPage() {
 
       {/* Scrape External Menu URL Modal */}
       {showScrapeModal && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 p-4">
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 p-4" role="dialog" aria-modal="true" aria-labelledby="scrape-modal-title">
           <div className="w-full max-w-lg rounded-2xl bg-white p-6 shadow-xl">
             <div className="flex items-center justify-between border-b border-gray-100 pb-3 mb-4">
-              <h3 className="text-lg font-bold text-gray-900">Scrape & Sync Menu from Web</h3>
+              <h3 id="scrape-modal-title" className="text-lg font-bold text-gray-900">Scrape & Sync Menu from Web</h3>
               <button
                 type="button"
+                aria-label="Close sync modal"
                 onClick={() => setShowScrapeModal(false)}
-                className="text-gray-400 hover:text-gray-600 text-sm font-medium"
+                className="text-gray-500 hover:text-gray-700 text-sm font-medium focus:outline-none focus:ring-2 focus:ring-gray-900 rounded p-1"
               >
                 ✕
               </button>
             </div>
 
-            <p className="text-xs text-gray-600 mb-4">
+            <p className="text-xs text-gray-700 mb-4">
               Provide a restaurant webpage URL. The scraper will extract items and prices, storing them into the live database.
             </p>
 
             <form onSubmit={handleScrapeMenu} className="space-y-4">
               <div>
-                <label className="block text-xs font-semibold text-gray-700 mb-1">Target Menu URL</label>
+                <label htmlFor="scrape-target-url" className="block text-xs font-semibold text-gray-700 mb-1">Target Menu URL</label>
                 <input
+                  id="scrape-target-url"
                   type="url"
                   required
                   value={scrapeUrl}
                   onChange={(e) => setScrapeUrl(e.target.value)}
                   placeholder="https://example-restaurant.com/menu"
-                  className="w-full rounded-lg border border-gray-300 px-3 py-2 text-sm focus:border-gray-900 focus:outline-none"
+                  className="w-full rounded-lg border border-gray-300 px-3 py-2 text-sm text-gray-900 placeholder:text-gray-500 focus:border-gray-900 focus:ring-2 focus:ring-gray-900 focus:outline-none"
                 />
               </div>
 
               {scrapeFeedback && (
-                <div className="p-3 rounded-lg bg-gray-100 text-xs font-mono text-gray-800">
+                <div className="p-3 rounded-lg bg-gray-100 text-xs font-mono text-gray-900">
                   {scrapeFeedback}
                 </div>
               )}
@@ -559,14 +575,14 @@ export default function MenuManagementPage() {
                 <button
                   type="button"
                   onClick={() => setShowScrapeModal(false)}
-                  className="rounded-lg border border-gray-300 px-4 py-2 text-xs font-semibold text-gray-700 hover:bg-gray-50"
+                  className="rounded-lg border border-gray-300 px-4 py-2 text-xs font-semibold text-gray-700 hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-gray-900"
                 >
                   Cancel
                 </button>
                 <button
                   type="submit"
                   disabled={scraping}
-                  className="rounded-lg bg-blue-600 px-4 py-2 text-xs font-semibold text-white hover:bg-blue-700 disabled:opacity-50"
+                  className="rounded-lg bg-blue-600 px-4 py-2 text-xs font-semibold text-white hover:bg-blue-700 disabled:opacity-50 focus:outline-none focus:ring-2 focus:ring-blue-600 focus:ring-offset-2"
                 >
                   {scraping ? 'Scraping...' : 'Start Extraction'}
                 </button>

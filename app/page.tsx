@@ -35,7 +35,8 @@ export default function HomePage() {
           <Link
             id="home-explore-menu-btn"
             href="/menu"
-            className="w-full sm:w-auto inline-flex items-center justify-center gap-2.5 rounded-xl bg-gray-900 px-6 py-3.5 text-sm font-bold text-white shadow-md hover:bg-black transition-all hover:scale-[1.02]"
+            aria-label="Launch table menu and AI concierge"
+            className="w-full sm:w-auto inline-flex items-center justify-center gap-2.5 rounded-xl bg-gray-900 px-6 py-3.5 text-sm font-bold text-white shadow-md hover:bg-black transition-all hover:scale-[1.02] focus:outline-none focus:ring-2 focus:ring-gray-900 focus:ring-offset-2"
           >
             <Utensils className="w-4 h-4" />
             Launch Table Menu & AI Concierge
@@ -45,7 +46,8 @@ export default function HomePage() {
           <Link
             id="home-kds-btn"
             href="/admin/kds"
-            className="w-full sm:w-auto inline-flex items-center justify-center gap-2 rounded-xl border border-gray-300 bg-white px-6 py-3.5 text-sm font-bold text-gray-800 hover:bg-gray-50 transition-colors shadow-2xs"
+            aria-label="Open Kitchen Display System"
+            className="w-full sm:w-auto inline-flex items-center justify-center gap-2 rounded-xl border border-gray-300 bg-white px-6 py-3.5 text-sm font-bold text-gray-800 hover:bg-gray-50 transition-colors shadow-2xs focus:outline-none focus:ring-2 focus:ring-gray-900 focus:ring-offset-2"
           >
             <ChefHat className="w-4 h-4 text-orange-600" />
             Kitchen Display (KDS)
@@ -68,7 +70,8 @@ export default function HomePage() {
           </div>
           <Link
             href="/menu"
-            className="mt-6 text-xs font-bold text-gray-900 inline-flex items-center gap-1 hover:underline"
+            aria-label="Try AI Assistant on the menu"
+            className="mt-6 text-xs font-bold text-gray-900 inline-flex items-center gap-1 hover:underline focus:outline-none focus:ring-2 focus:ring-gray-900 rounded"
           >
             Try AI Assistant &rarr;
           </Link>
@@ -87,7 +90,8 @@ export default function HomePage() {
           </div>
           <Link
             href="/admin/kds"
-            className="mt-6 text-xs font-bold text-gray-900 inline-flex items-center gap-1 hover:underline"
+            aria-label="Open Kitchen Display Screen"
+            className="mt-6 text-xs font-bold text-gray-900 inline-flex items-center gap-1 hover:underline focus:outline-none focus:ring-2 focus:ring-gray-900 rounded"
           >
             Open KDS Screen &rarr;
           </Link>
@@ -106,7 +110,8 @@ export default function HomePage() {
           </div>
           <Link
             href="/admin/manage"
-            className="mt-6 text-xs font-bold text-gray-900 inline-flex items-center gap-1 hover:underline"
+            aria-label="Manage restaurant inventory and 86 items"
+            className="mt-6 text-xs font-bold text-gray-900 inline-flex items-center gap-1 hover:underline focus:outline-none focus:ring-2 focus:ring-gray-900 rounded"
           >
             Manage Inventory &rarr;
           </Link>

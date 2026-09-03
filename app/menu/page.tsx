@@ -174,7 +174,7 @@ export default function MenuPage() {
                 Kitchen Online
               </span>
             </div>
-            <p className="text-xs sm:text-sm text-gray-500 mt-0.5">
+            <p className="text-xs sm:text-sm text-gray-600 mt-0.5">
               Live contactless ordering. Pay directly to your waiter at the table.
             </p>
           </div>
@@ -184,10 +184,11 @@ export default function MenuPage() {
             <button
               type="button"
               id="sync-firestore-btn"
+              aria-label="Sync menu to Firestore database"
               onClick={handleSyncDatabase}
               disabled={isSyncingDb}
               title="Populate your connected Firebase Firestore database with all default menu dishes and deals"
-              className="inline-flex items-center gap-1.5 rounded-lg border border-amber-300 bg-amber-50/70 hover:bg-amber-100/90 text-amber-900 px-2.5 py-1.5 text-xs font-semibold transition-all disabled:opacity-50 shadow-2xs"
+              className="inline-flex items-center gap-1.5 rounded-lg border border-amber-300 bg-amber-50/70 hover:bg-amber-100/90 text-amber-900 px-2.5 py-1.5 text-xs font-semibold transition-all disabled:opacity-50 shadow-2xs focus:outline-none focus:ring-2 focus:ring-amber-500 focus:ring-offset-2"
             >
               {isSyncingDb ? (
                 <RefreshCw className="w-3.5 h-3.5 animate-spin text-amber-700" />
@@ -199,13 +200,16 @@ export default function MenuPage() {
 
             {/* Table Number Selector */}
             <div className="flex items-center gap-1.5 rounded-lg border border-gray-200 bg-gray-50 px-3 py-1.5 shadow-2xs">
-              <Utensils className="w-3.5 h-3.5 text-gray-500" />
-              <span className="text-xs font-semibold text-gray-700">Table:</span>
+              <Utensils className="w-3.5 h-3.5 text-gray-600" />
+              <label htmlFor="menu-table-select" className="text-xs font-semibold text-gray-700">
+                Table:
+              </label>
               <select
                 id="menu-table-select"
+                aria-label="Select dining table number"
                 value={tableNumber}
                 onChange={handleTableChange}
-                className="bg-transparent text-xs font-bold text-gray-900 focus:outline-none cursor-pointer"
+                className="bg-transparent text-xs font-bold text-gray-900 focus:outline-none focus:ring-2 focus:ring-gray-900 focus:rounded cursor-pointer"
               >
                 {[1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12].map((num) => (
                   <option key={num} value={String(num)}>
@@ -234,7 +238,7 @@ export default function MenuPage() {
           <div className="w-full">
             {/* Active Deals & Combo Offers */}
             {deals.length > 0 && (
-              <section id="menu-deals-section" className="mb-8">
+              <section id="menu-deals-section" className="mb-8" aria-label="Active deals and combo promotions">
                 <div className="flex items-center gap-2 mb-3">
                   <Tag className="w-4 h-4 text-amber-600" />
                   <h2 className="text-sm font-bold uppercase tracking-wider text-gray-900">
@@ -251,7 +255,7 @@ export default function MenuPage() {
                     >
                       <div>
                         <div className="flex items-center justify-between">
-                          <span className="text-[10px] font-bold uppercase tracking-wider text-amber-800 bg-amber-100/90 px-2 py-0.5 rounded-md">
+                          <span className="text-xs font-bold uppercase tracking-wider text-amber-900 bg-amber-100/90 px-2 py-0.5 rounded-md">
                             Special Promo
                           </span>
                           {deal.discountedPrice && (
@@ -264,8 +268,8 @@ export default function MenuPage() {
                         <p className="text-xs text-gray-600 mt-1 leading-relaxed">{deal.description}</p>
                       </div>
                       {deal.conditions && (
-                        <p className="text-[10px] text-amber-700/90 mt-3 pt-2 border-t border-amber-100 flex items-center gap-1">
-                          <Clock className="w-3 h-3" /> {deal.conditions}
+                        <p className="text-xs text-amber-900 mt-3 pt-2 border-t border-amber-100 flex items-center gap-1">
+                          <Clock className="w-3 h-3 text-amber-700" /> {deal.conditions}
                         </p>
                       )}
                     </div>
@@ -279,20 +283,25 @@ export default function MenuPage() {
               <div className="flex flex-col sm:flex-row sm:items-center gap-3">
                 {/* Search Bar */}
                 <div className="relative flex-1">
-                  <Search className="w-4 h-4 absolute left-3.5 top-3 text-gray-400 pointer-events-none" />
+                  <label htmlFor="menu-search-input" className="sr-only">
+                    Search dishes, ingredients, or allergens
+                  </label>
+                  <Search className="w-4 h-4 absolute left-3.5 top-3 text-gray-500 pointer-events-none" />
                   <input
                     type="text"
                     id="menu-search-input"
+                    aria-label="Search dishes, ingredients, or allergens"
                     value={searchQuery}
                     onChange={(e) => setSearchQuery(e.target.value)}
                     placeholder="Search dishes, ingredients, or allergens..."
-                    className="w-full rounded-xl border border-gray-300 pl-10 pr-4 py-2 text-sm text-gray-900 placeholder:text-gray-400 focus:border-gray-900 focus:ring-1 focus:ring-gray-900 focus:outline-none bg-white shadow-2xs"
+                    className="w-full rounded-xl border border-gray-300 pl-10 pr-12 py-2 text-sm text-gray-900 placeholder:text-gray-500 focus:border-gray-900 focus:ring-2 focus:ring-gray-900 focus:outline-none bg-white shadow-2xs"
                   />
                   {searchQuery && (
                     <button
                       type="button"
+                      aria-label="Clear search query"
                       onClick={() => setSearchQuery('')}
-                      className="absolute right-3 top-2.5 text-xs text-gray-400 hover:text-gray-600"
+                      className="absolute right-3 top-2.5 text-xs font-medium text-gray-600 hover:text-gray-900 focus:outline-none focus:ring-2 focus:ring-gray-900 rounded px-1"
                     >
                       Clear
                     </button>
@@ -300,7 +309,7 @@ export default function MenuPage() {
                 </div>
 
                 {/* Dietary Filter Pills */}
-                <div className="flex items-center gap-1.5 overflow-x-auto pb-1 sm:pb-0">
+                <div className="flex items-center gap-1.5 overflow-x-auto pb-1 sm:pb-0" role="group" aria-label="Dietary filters">
                   {[
                     { key: 'all', label: 'All Dishes' },
                     { key: 'veg', label: '🌱 Veg' },
@@ -310,8 +319,9 @@ export default function MenuPage() {
                     <button
                       key={filter.key}
                       type="button"
+                      aria-label={`Filter by ${filter.label}`}
                       onClick={() => setDietaryFilter(filter.key as any)}
-                      className={`px-3 py-1.5 rounded-lg text-xs font-semibold whitespace-nowrap transition-colors ${
+                      className={`px-3 py-1.5 rounded-lg text-xs font-semibold whitespace-nowrap transition-colors focus:outline-none focus:ring-2 focus:ring-gray-900 focus:ring-offset-2 ${
                         dietaryFilter === filter.key
                           ? 'bg-gray-900 text-white shadow-2xs'
                           : 'bg-white border border-gray-200 text-gray-700 hover:bg-gray-100'
@@ -324,16 +334,19 @@ export default function MenuPage() {
               </div>
 
               {/* Category Tabs */}
-              <div className="flex items-center gap-2 overflow-x-auto scrollbar-none pt-1">
+              <div className="flex items-center gap-2 overflow-x-auto scrollbar-none pt-1" role="tablist" aria-label="Menu categories">
                 {availableCategories.map((cat) => (
                   <button
                     key={cat}
                     type="button"
+                    role="tab"
+                    aria-selected={selectedCategory === cat}
+                    aria-label={`Category: ${cat}`}
                     onClick={() => setSelectedCategory(cat)}
-                    className={`px-3.5 py-1.5 rounded-full text-xs font-medium whitespace-nowrap transition-all ${
+                    className={`px-3.5 py-1.5 rounded-full text-xs font-medium whitespace-nowrap transition-all focus:outline-none focus:ring-2 focus:ring-gray-900 focus:ring-offset-2 ${
                       selectedCategory === cat
                         ? 'bg-gray-900 text-white shadow-xs'
-                        : 'bg-white text-gray-600 border border-gray-200 hover:border-gray-300 hover:text-gray-900'
+                        : 'bg-white text-gray-700 border border-gray-200 hover:border-gray-300 hover:text-gray-900'
                     }`}
                   >
                     {cat}
@@ -355,12 +368,12 @@ export default function MenuPage() {
                 />
                 <div>
                   <div className="flex items-center gap-2">
-                    <span className="inline-flex items-center gap-1 rounded-full bg-amber-100 px-2 py-0.5 text-[10px] font-extrabold text-amber-800 tracking-wide uppercase">
+                    <span className="inline-flex items-center gap-1 rounded-full bg-amber-100 px-2 py-0.5 text-xs font-extrabold text-amber-900 tracking-wide uppercase">
                       3D AI Concierge
                     </span>
                     <p className="text-xs font-bold text-gray-900">Need dish recommendations or allergen check?</p>
                   </div>
-                  <p className="text-[11px] text-gray-600 mt-0.5">
+                  <p className="text-xs text-gray-700 mt-0.5">
                     Click the 3D Orb or Ask Tabl Assistant for budget combos, chef specialties, and live dish pairing.
                   </p>
                 </div>
@@ -368,8 +381,9 @@ export default function MenuPage() {
               <button
                 type="button"
                 id="banner-open-ai-btn"
+                aria-label="Open AI menu assistant"
                 onClick={() => setIsChatOpen(true)}
-                className="inline-flex items-center justify-center gap-1.5 rounded-xl bg-gray-900 hover:bg-black px-4 py-2 text-xs font-bold text-white transition-all shadow-xs hover:scale-105 active:scale-95 whitespace-nowrap"
+                className="inline-flex items-center justify-center gap-1.5 rounded-xl bg-gray-900 hover:bg-black px-4 py-2 text-xs font-bold text-white transition-all shadow-xs hover:scale-105 active:scale-95 whitespace-nowrap focus:outline-none focus:ring-2 focus:ring-amber-400 focus:ring-offset-2 focus:ring-offset-gray-900"
               >
                 <Sparkles className="w-3.5 h-3.5 text-amber-400" />
                 <span>Open Assistant</span>
@@ -390,19 +404,20 @@ export default function MenuPage() {
               </div>
             ) : filteredItems.length === 0 ? (
               <div className="rounded-2xl border border-dashed border-gray-300 bg-white p-12 text-center">
-                <Utensils className="w-10 h-10 text-gray-300 mx-auto mb-2" />
+                <Utensils className="w-10 h-10 text-gray-400 mx-auto mb-2" />
                 <h3 className="text-base font-semibold text-gray-900">No items match your filter</h3>
-                <p className="text-xs text-gray-500 mt-1">
+                <p className="text-xs text-gray-600 mt-1">
                   Try clearing your search query or selecting a different dietary filter.
                 </p>
                 <button
                   type="button"
+                  aria-label="Reset all search and category filters"
                   onClick={() => {
                     setSelectedCategory('All');
                     setDietaryFilter('all');
                     setSearchQuery('');
                   }}
-                  className="mt-4 rounded-lg bg-gray-900 px-3.5 py-1.5 text-xs font-semibold text-white hover:bg-gray-800"
+                  className="mt-4 rounded-lg bg-gray-900 px-3.5 py-1.5 text-xs font-semibold text-white hover:bg-gray-800 focus:outline-none focus:ring-2 focus:ring-gray-900 focus:ring-offset-2"
                 >
                   Reset All Filters
                 </button>
@@ -429,18 +444,18 @@ export default function MenuPage() {
                       {/* Top Meta & Badges */}
                       <div>
                         <div className="flex items-start justify-between gap-2 mb-2">
-                          <span className="text-[11px] font-semibold text-gray-500 uppercase tracking-wider">
+                          <span className="text-xs font-semibold text-gray-600 uppercase tracking-wider">
                             {item.category}
                           </span>
 
                           {/* Availability Badge */}
                           {item.isAvailable ? (
-                            <span className="inline-flex items-center gap-1 rounded-full bg-emerald-50 px-2 py-0.5 text-[10px] font-semibold text-emerald-700 ring-1 ring-emerald-600/20">
-                              <CheckCircle2 className="w-3 h-3" /> In Stock
+                            <span className="inline-flex items-center gap-1 rounded-full bg-emerald-50 px-2 py-0.5 text-xs font-semibold text-emerald-800 ring-1 ring-emerald-600/20">
+                              <CheckCircle2 className="w-3 h-3 text-emerald-600" /> In Stock
                             </span>
                           ) : (
-                            <span className="inline-flex items-center gap-1 rounded-full bg-rose-50 px-2 py-0.5 text-[10px] font-semibold text-rose-700 ring-1 ring-rose-600/20">
-                              <XCircle className="w-3 h-3" /> 86&apos;d / Out
+                            <span className="inline-flex items-center gap-1 rounded-full bg-rose-50 px-2 py-0.5 text-xs font-semibold text-rose-800 ring-1 ring-rose-600/20">
+                              <XCircle className="w-3 h-3 text-rose-600" /> 86&apos;d / Out
                             </span>
                           )}
                         </div>
@@ -463,28 +478,28 @@ export default function MenuPage() {
                         {/* Dietary Tags & Spice */}
                         <div className="flex flex-wrap items-center gap-1.5 mb-4">
                           {item.isVegetarian && (
-                            <span className="text-[10px] font-semibold bg-emerald-50 text-emerald-700 border border-emerald-200 px-1.5 py-0.5 rounded">
+                            <span className="text-xs font-semibold bg-emerald-50 text-emerald-800 border border-emerald-300 px-1.5 py-0.5 rounded">
                               Veg
                             </span>
                           )}
                           {item.isVegan && (
-                            <span className="text-[10px] font-semibold bg-green-50 text-green-700 border border-green-200 px-1.5 py-0.5 rounded">
+                            <span className="text-xs font-semibold bg-green-50 text-green-800 border border-green-300 px-1.5 py-0.5 rounded">
                               Vegan
                             </span>
                           )}
                           {item.isGlutenFree && (
-                            <span className="text-[10px] font-semibold bg-amber-50 text-amber-700 border border-amber-200 px-1.5 py-0.5 rounded">
+                            <span className="text-xs font-semibold bg-amber-50 text-amber-800 border border-amber-300 px-1.5 py-0.5 rounded">
                               Gluten Free
                             </span>
                           )}
                           {item.spiceLevel ? (
-                            <span className="text-[10px] font-semibold bg-red-50 text-red-700 border border-red-200 px-1.5 py-0.5 rounded flex items-center gap-0.5">
-                              <Flame className="w-3 h-3 text-red-500 fill-current" />
+                            <span className="text-xs font-semibold bg-red-50 text-red-800 border border-red-300 px-1.5 py-0.5 rounded flex items-center gap-0.5">
+                              <Flame className="w-3 h-3 text-red-600 fill-current" />
                               Spice {item.spiceLevel}
                             </span>
                           ) : null}
                           {item.allergens && item.allergens.length > 0 && (
-                            <span className="text-[10px] text-gray-500 bg-gray-100 px-1.5 py-0.5 rounded">
+                            <span className="text-xs text-gray-600 bg-gray-100 px-1.5 py-0.5 rounded">
                               Contains: {item.allergens.join(', ')}
                             </span>
                           )}
@@ -499,8 +514,9 @@ export default function MenuPage() {
                             <div className="flex items-center rounded-lg border border-gray-200 bg-gray-50 p-1">
                               <button
                                 type="button"
+                                aria-label={`Decrease quantity of ${item.name}`}
                                 onClick={() => handleQuantityChange(item.id, -1)}
-                                className="w-6 h-6 rounded flex items-center justify-center text-gray-600 hover:bg-white transition-colors"
+                                className="w-6 h-6 rounded flex items-center justify-center text-gray-700 hover:bg-white transition-colors focus:outline-none focus:ring-2 focus:ring-gray-900"
                               >
                                 <Minus className="w-3 h-3" />
                               </button>
@@ -509,8 +525,9 @@ export default function MenuPage() {
                               </span>
                               <button
                                 type="button"
+                                aria-label={`Increase quantity of ${item.name}`}
                                 onClick={() => handleQuantityChange(item.id, 1)}
-                                className="w-6 h-6 rounded flex items-center justify-center text-gray-600 hover:bg-white transition-colors"
+                                className="w-6 h-6 rounded flex items-center justify-center text-gray-700 hover:bg-white transition-colors focus:outline-none focus:ring-2 focus:ring-gray-900"
                               >
                                 <Plus className="w-3 h-3" />
                               </button>
@@ -520,8 +537,9 @@ export default function MenuPage() {
                             <button
                               type="button"
                               id={`add-to-cart-${item.id}`}
+                              aria-label={`Add ${item.name} to cart`}
                               onClick={() => handleAddToCart(item)}
-                              className={`flex-1 inline-flex items-center justify-center gap-1.5 rounded-lg py-2 px-3 text-xs font-semibold transition-all shadow-2xs ${
+                              className={`flex-1 inline-flex items-center justify-center gap-1.5 rounded-lg py-2 px-3 text-xs font-semibold transition-all shadow-2xs focus:outline-none focus:ring-2 focus:ring-gray-900 focus:ring-offset-2 ${
                                 isJustAdded
                                   ? 'bg-emerald-600 text-white'
                                   : 'bg-gray-900 text-white hover:bg-gray-800'
@@ -539,7 +557,7 @@ export default function MenuPage() {
                             </button>
                           </>
                         ) : (
-                          <div className="w-full text-center py-2 text-xs font-semibold text-rose-600 bg-rose-50/80 rounded-lg border border-rose-100">
+                          <div className="w-full text-center py-2 text-xs font-semibold text-rose-700 bg-rose-50/80 rounded-lg border border-rose-100">
                             Currently Unavailable
                           </div>
                         )}
@@ -592,7 +610,7 @@ export default function MenuPage() {
               </div>
               <div>
                 <div className="flex items-center gap-2">
-                  <span className="text-xs font-semibold text-gray-500">
+                  <span className="text-xs font-semibold text-gray-700">
                     Table {tableNumber} Cart:
                   </span>
                   <span className="text-xs font-bold text-gray-900">
@@ -609,7 +627,8 @@ export default function MenuPage() {
               <Link
                 id="view-cart-btn"
                 href="/cart"
-                className="inline-flex items-center gap-2 rounded-xl bg-gray-900 px-5 py-2.5 text-xs font-bold text-white hover:bg-gray-800 transition-colors shadow-xs"
+                aria-label="Review Cart and Place Order"
+                className="inline-flex items-center gap-2 rounded-xl bg-gray-900 px-5 py-2.5 text-xs font-bold text-white hover:bg-gray-800 transition-colors shadow-xs focus:outline-none focus:ring-2 focus:ring-gray-900 focus:ring-offset-2"
               >
                 <span>Review Cart & Place Order</span>
                 <ChevronRight className="w-4 h-4" />

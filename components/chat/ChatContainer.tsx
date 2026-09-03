@@ -73,10 +73,10 @@ function sanitizeStreamingMarkdown(text: string): string {
  * Helper to render spice level indicators
  */
 function renderSpiceIndicator(level: number) {
-  if (level === 0) return <span className="text-gray-500 text-[11px]">Mild / No Heat</span>;
-  if (level === 1) return <span className="text-amber-600 text-[11px] font-medium">🌶️ Mild Spice</span>;
-  if (level === 2) return <span className="text-orange-600 text-[11px] font-medium">🌶️🌶️ Medium</span>;
-  return <span className="text-rose-600 text-[11px] font-semibold">🌶️🌶️🌶️ Hot</span>;
+  if (level === 0) return <span className="text-gray-600 text-xs">Mild / No Heat</span>;
+  if (level === 1) return <span className="text-amber-700 text-xs font-medium">🌶️ Mild Spice</span>;
+  if (level === 2) return <span className="text-orange-700 text-xs font-medium">🌶️🌶️ Medium</span>;
+  return <span className="text-rose-700 text-xs font-semibold">🌶️🌶️🌶️ Hot</span>;
 }
 
 /**
@@ -107,21 +107,21 @@ function DishCard({
         <div className="flex items-start justify-between gap-2">
           <div className="min-w-0 flex-1">
             <div className="flex items-center gap-1.5 flex-wrap">
-              <span className="text-[10px] uppercase font-bold tracking-wider px-2 py-0.5 rounded bg-gray-100 text-gray-700">
+              <span className="text-xs uppercase font-bold tracking-wider px-2 py-0.5 rounded bg-gray-100 text-gray-700">
                 {dish.category || 'Mains'}
               </span>
               {dish.isVegan && (
-                <span className="text-[10px] font-semibold px-2 py-0.5 rounded bg-emerald-50 text-emerald-700 border border-emerald-200">
+                <span className="text-xs font-semibold px-2 py-0.5 rounded bg-emerald-50 text-emerald-800 border border-emerald-300">
                   🌿 100% Vegan
                 </span>
               )}
               {!dish.isVegan && dish.isVegetarian && (
-                <span className="text-[10px] font-semibold px-2 py-0.5 rounded bg-emerald-50 text-emerald-700 border border-emerald-200">
+                <span className="text-xs font-semibold px-2 py-0.5 rounded bg-emerald-50 text-emerald-800 border border-emerald-300">
                   🌱 Vegetarian
                 </span>
               )}
               {dish.isGlutenFree && (
-                <span className="text-[10px] font-semibold px-2 py-0.5 rounded bg-amber-50 text-amber-700 border border-amber-200">
+                <span className="text-xs font-semibold px-2 py-0.5 rounded bg-amber-50 text-amber-800 border border-amber-300">
                   🌾 Gluten-Free
                 </span>
               )}
@@ -146,10 +146,10 @@ function DishCard({
         )}
 
         {/* Spice and Allergens meta */}
-        <div className="flex items-center justify-between text-[11px] pt-1 text-gray-500 border-t border-gray-100/80">
+        <div className="flex items-center justify-between text-xs pt-1 text-gray-600 border-t border-gray-100/80">
           <div>{renderSpiceIndicator(dish.spiceLevel ?? 0)}</div>
           {dish.allergens && dish.allergens.length > 0 && (
-            <span className="text-[10px] text-gray-400 truncate max-w-[120px]" title={dish.allergens.join(', ')}>
+            <span className="text-xs text-gray-600 truncate max-w-[140px]" title={dish.allergens.join(', ')}>
               Allergens: {dish.allergens.join(', ')}
             </span>
           )}
@@ -161,8 +161,9 @@ function DishCard({
         <button
           type="button"
           id={`add-to-cart-gen-${dish.id}`}
+          aria-label={`Add ${dish.name} to table cart`}
           onClick={handleAdd}
-          className={`w-full inline-flex items-center justify-center gap-1.5 rounded-lg py-1.5 px-3 text-xs font-semibold transition-all shadow-2xs ${
+          className={`w-full inline-flex items-center justify-center gap-1.5 rounded-lg py-1.5 px-3 text-xs font-semibold transition-all shadow-2xs focus:outline-none focus:ring-2 focus:ring-gray-900 focus:ring-offset-2 ${
             added
               ? 'bg-emerald-600 text-white'
               : 'bg-gray-900 hover:bg-black text-white hover:scale-[1.01]'
@@ -257,7 +258,7 @@ function ToolInvocationRenderer({
             <Filter className="w-3.5 h-3.5 text-gray-600" />
             <span>Active Menu Search</span>
           </div>
-          <span className="inline-flex items-center gap-1 rounded-full bg-amber-50 px-2 py-0.5 text-[10px] font-semibold text-amber-700 ring-1 ring-amber-600/20">
+          <span className="inline-flex items-center gap-1 rounded-full bg-amber-50 px-2 py-0.5 text-xs font-semibold text-amber-800 ring-1 ring-amber-600/20">
             <span className="w-1.5 h-1.5 rounded-full bg-amber-500 animate-pulse" />
             Querying Kitchen...
           </span>
@@ -268,7 +269,7 @@ function ToolInvocationRenderer({
             {filterPills.map((pill, idx) => (
               <span
                 key={idx}
-                className="inline-flex items-center rounded-md bg-gray-100 px-2 py-0.5 text-[10px] font-medium text-gray-700 border border-gray-200"
+                className="inline-flex items-center rounded-md bg-gray-100 px-2 py-0.5 text-xs font-medium text-gray-700 border border-gray-200"
               >
                 {pill}
               </span>
@@ -313,11 +314,11 @@ function ToolInvocationRenderer({
 
           {filterPills.length > 0 && (
             <div className="flex flex-wrap gap-1 pt-1">
-              <span className="text-[10px] font-bold text-amber-700 self-center">Tried:</span>
+              <span className="text-xs font-bold text-amber-800 self-center">Tried:</span>
               {filterPills.map((pill, idx) => (
                 <span
                   key={idx}
-                  className="inline-flex items-center rounded-md bg-white/80 px-2 py-0.5 text-[10px] font-medium text-amber-800 border border-amber-200"
+                  className="inline-flex items-center rounded-md bg-white/80 px-2 py-0.5 text-xs font-medium text-amber-900 border border-amber-300"
                 >
                   {pill}
                 </span>
@@ -329,8 +330,9 @@ function ToolInvocationRenderer({
             <button
               type="button"
               id="generative-reset-filters-btn"
+              aria-label="Reset active search filters"
               onClick={onResetFilters}
-              className="inline-flex items-center gap-1 rounded-lg bg-white px-2.5 py-1 text-xs font-semibold text-amber-900 border border-amber-300 hover:bg-amber-100 transition-colors shadow-2xs"
+              className="inline-flex items-center gap-1 rounded-lg bg-white px-2.5 py-1 text-xs font-semibold text-amber-900 border border-amber-300 hover:bg-amber-100 transition-colors shadow-2xs focus:outline-none focus:ring-2 focus:ring-amber-500 focus:ring-offset-2"
             >
               <RefreshCw className="w-3 h-3" />
               Reset Filters
@@ -338,7 +340,8 @@ function ToolInvocationRenderer({
             <Link
               href="/menu"
               onClick={onClose}
-              className="inline-flex items-center gap-1 rounded-lg bg-amber-900 px-2.5 py-1 text-xs font-semibold text-white hover:bg-black transition-colors shadow-2xs"
+              aria-label="Browse full restaurant menu"
+              className="inline-flex items-center gap-1 rounded-lg bg-amber-900 px-2.5 py-1 text-xs font-semibold text-white hover:bg-black transition-colors shadow-2xs focus:outline-none focus:ring-2 focus:ring-amber-900 focus:ring-offset-2"
             >
               <Utensils className="w-3 h-3" />
               Browse Full Menu
@@ -358,7 +361,7 @@ function ToolInvocationRenderer({
           </div>
 
           {filterPills.length > 0 && (
-            <span className="text-[10px] text-gray-500 font-mono">
+            <span className="text-xs text-gray-600 font-mono">
               {filterPills.slice(0, 2).join(' · ')}
             </span>
           )}
@@ -645,12 +648,12 @@ export default function ChatContainer({
               <h2 id="concierge-title" className="text-sm font-bold text-white tracking-tight truncate">
                 Tabl Concierge
               </h2>
-              <span className="inline-flex items-center gap-1 rounded-full bg-emerald-500/20 px-2 py-0.5 text-[10px] font-semibold text-emerald-300 ring-1 ring-inset ring-emerald-500/30 shrink-0">
+              <span className="inline-flex items-center gap-1 rounded-full bg-emerald-500/20 px-2 py-0.5 text-xs font-semibold text-emerald-300 ring-1 ring-inset ring-emerald-500/30 shrink-0">
                 <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse" />
                 Live Kitchen
               </span>
             </div>
-            <p className="text-[11px] text-gray-400 truncate">Generative Menu & Dietary AI Advisor</p>
+            <p className="text-xs text-gray-300 truncate">Generative Menu & Dietary AI Advisor</p>
           </div>
         </div>
 
@@ -658,9 +661,10 @@ export default function ChatContainer({
           <button
             type="button"
             id="concierge-clear-history-btn"
+            aria-label="Reset conversation and clear chat history"
             onClick={handleClearHistory}
             title="Reset conversation"
-            className="p-1.5 text-gray-400 hover:text-white rounded-md hover:bg-white/10 transition-colors"
+            className="p-1.5 text-gray-300 hover:text-white rounded-md hover:bg-white/10 transition-colors focus:outline-none focus:ring-2 focus:ring-amber-400 focus:ring-offset-2 focus:ring-offset-gray-900"
           >
             <Trash2 className="w-4 h-4" />
           </button>
@@ -670,8 +674,8 @@ export default function ChatContainer({
               type="button"
               id="concierge-close-btn"
               onClick={onClose}
-              aria-label="Close concierge"
-              className="p-1.5 text-gray-400 hover:text-white rounded-md hover:bg-white/10 transition-colors"
+              aria-label="Close AI concierge"
+              className="p-1.5 text-gray-300 hover:text-white rounded-md hover:bg-white/10 transition-colors focus:outline-none focus:ring-2 focus:ring-amber-400 focus:ring-offset-2 focus:ring-offset-gray-900"
             >
               <X className="w-5 h-5" />
             </button>
@@ -684,7 +688,11 @@ export default function ChatContainer({
         ref={scrollContainerRef}
         onScroll={handleScroll}
         id="concierge-messages-list"
-        className="flex-1 min-h-0 h-0 overflow-y-auto overflow-x-hidden p-4 space-y-4 bg-gray-50/60 chat-scroll-area relative"
+        aria-label="AI chat conversation"
+        aria-live="polite"
+        aria-atomic="false"
+        tabIndex={0}
+        className="flex-1 min-h-0 h-0 overflow-y-auto overflow-x-hidden p-4 space-y-4 bg-gray-50/60 chat-scroll-area relative focus:outline-none"
         style={{ overflow: 'scroll' }}
       >
         {(messages || []).map((m: any, mIdx) => {
@@ -754,19 +762,20 @@ export default function ChatContainer({
                       <span className="w-2 h-2 bg-amber-500 rounded-full animate-bounce [animation-delay:-0.15s]" />
                       <span className="w-2 h-2 bg-amber-500 rounded-full animate-bounce" />
                     </div>
-                    <span className="text-xs text-gray-500 font-medium ml-1">
+                    <span className="text-xs text-gray-700 font-medium ml-1">
                       Consulting live kitchen menu & deals...
                     </span>
                   </div>
                 ) : isEmptyAssistant ? (
                   <div className="space-y-2 py-0.5">
-                    <p className="text-xs text-gray-600 leading-relaxed">
+                    <p className="text-xs text-gray-700 leading-relaxed">
                       I didn&apos;t get a complete response from the kitchen. Would you like me to try again?
                     </p>
                     <button
                       type="button"
+                      aria-label="Retry AI response"
                       onClick={() => regenerate()}
-                      className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-md bg-gray-100 hover:bg-gray-200 text-xs font-semibold text-gray-800 transition-colors shadow-2xs"
+                      className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-md bg-gray-100 hover:bg-gray-200 text-xs font-semibold text-gray-800 transition-colors shadow-2xs focus:outline-none focus:ring-2 focus:ring-gray-900 focus:ring-offset-2"
                     >
                       <RefreshCw className="w-3 h-3" />
                       <span>Retry</span>
@@ -826,8 +835,9 @@ export default function ChatContainer({
             <button
               type="button"
               id="concierge-retry-btn"
+              aria-label="Retry generating AI response"
               onClick={() => regenerate()}
-              className="inline-flex items-center gap-1 rounded-md bg-rose-600 px-2.5 py-1 text-xs font-semibold text-white hover:bg-rose-700 transition-colors shadow-2xs shrink-0"
+              className="inline-flex items-center gap-1 rounded-md bg-rose-600 px-2.5 py-1 text-xs font-semibold text-white hover:bg-rose-700 transition-colors shadow-2xs shrink-0 focus:outline-none focus:ring-2 focus:ring-rose-500 focus:ring-offset-2"
             >
               <RefreshCw className="w-3 h-3" />
               Retry
@@ -841,8 +851,9 @@ export default function ChatContainer({
             <button
               type="button"
               id="jump-to-bottom-btn"
+              aria-label="Jump to latest message"
               onClick={() => scrollToBottom(true)}
-              className={`inline-flex items-center gap-2 rounded-full px-4 py-1.5 text-xs font-semibold shadow-lg transition-all hover:scale-105 ${
+              className={`inline-flex items-center gap-2 rounded-full px-4 py-1.5 text-xs font-semibold shadow-lg transition-all hover:scale-105 focus:outline-none focus:ring-2 focus:ring-amber-500 focus:ring-offset-2 ${
                 hasNewStreamContentWhileScrolled
                   ? 'bg-amber-500 text-gray-950 hover:bg-amber-400 ring-2 ring-amber-400/50'
                   : 'bg-gray-900/95 hover:bg-gray-900 text-white backdrop-blur-xs'
@@ -871,7 +882,7 @@ export default function ChatContainer({
         aria-label="Quick suggestions"
         className="flex-shrink-0 px-3 py-2 bg-gray-50 border-t border-gray-200/80 flex flex-wrap items-center gap-1.5 max-h-[85px] overflow-y-auto no-scrollbar"
       >
-        <span className="text-[10px] uppercase font-bold tracking-wider text-gray-400 whitespace-nowrap pl-1 pr-1">
+        <span className="text-xs uppercase font-bold tracking-wider text-gray-600 whitespace-nowrap pl-1 pr-1">
           Suggestions:
         </span>
         {QUICK_SUGGESTIONS.map((chip, idx) => (
@@ -879,8 +890,9 @@ export default function ChatContainer({
             key={idx}
             type="button"
             disabled={isGenerating}
+            aria-label={`Ask suggestion: ${chip}`}
             onClick={() => handleSuggestionClick(chip)}
-            className="rounded-full border border-gray-200 bg-white px-2.5 py-1 text-xs font-medium text-gray-700 hover:bg-gray-100 hover:border-gray-300 transition-colors whitespace-nowrap shadow-2xs disabled:opacity-50 disabled:pointer-events-none shrink-0"
+            className="rounded-full border border-gray-200 bg-white px-2.5 py-1 text-xs font-medium text-gray-700 hover:bg-gray-100 hover:border-gray-300 transition-colors whitespace-nowrap shadow-2xs disabled:opacity-50 disabled:pointer-events-none shrink-0 focus:outline-none focus:ring-2 focus:ring-gray-900 focus:ring-offset-1"
           >
             {chip}
           </button>
@@ -894,6 +906,7 @@ export default function ChatContainer({
             ref={inputRef}
             id="concierge-input-field"
             type="text"
+            aria-label="Ask Tabl Concierge a question"
             value={input}
             onChange={(e) => setInput(e.target.value)}
             disabled={isGenerating}
@@ -902,7 +915,7 @@ export default function ChatContainer({
                 ? 'Tabl Concierge is answering...'
                 : 'Ask about dishes, deals, dietary options, or price...'
             }
-            className="flex-1 rounded-xl border border-gray-300 bg-white px-3.5 py-2.5 text-sm text-gray-900 placeholder:text-gray-400 focus:border-gray-900 focus:ring-1 focus:ring-gray-900 focus:outline-none disabled:bg-gray-50 disabled:text-gray-400 transition-colors shadow-2xs"
+            className="flex-1 rounded-xl border border-gray-300 bg-white px-3.5 py-2.5 text-sm text-gray-900 placeholder:text-gray-500 focus:border-gray-900 focus:ring-2 focus:ring-gray-900 focus:outline-none disabled:bg-gray-50 disabled:text-gray-500 transition-colors shadow-2xs"
           />
 
           {/* Stop Button during generation, otherwise Send Button */}
@@ -910,8 +923,9 @@ export default function ChatContainer({
             <button
               type="button"
               id="concierge-stop-btn"
+              aria-label="Stop generating response"
               onClick={() => stop()}
-              className="inline-flex items-center justify-center gap-1.5 px-3 h-10 rounded-xl bg-rose-600 text-white hover:bg-rose-700 transition-all shadow-xs shrink-0 font-semibold text-xs animate-in fade-in"
+              className="inline-flex items-center justify-center gap-1.5 px-3 h-10 rounded-xl bg-rose-600 text-white hover:bg-rose-700 transition-all shadow-xs shrink-0 font-semibold text-xs animate-in fade-in focus:outline-none focus:ring-2 focus:ring-rose-500 focus:ring-offset-2"
               title="Stop generating"
             >
               <Square className="w-3.5 h-3.5 fill-current" />
@@ -921,8 +935,9 @@ export default function ChatContainer({
             <button
               type="submit"
               id="concierge-send-btn"
+              aria-label="Send message to concierge"
               disabled={!input.trim() || isGenerating}
-              className="inline-flex items-center justify-center w-10 h-10 rounded-xl bg-gray-900 text-white hover:bg-black transition-colors shadow-xs disabled:opacity-40 disabled:pointer-events-none shrink-0"
+              className="inline-flex items-center justify-center w-10 h-10 rounded-xl bg-gray-900 text-white hover:bg-black transition-colors shadow-xs disabled:opacity-40 disabled:pointer-events-none shrink-0 focus:outline-none focus:ring-2 focus:ring-gray-900 focus:ring-offset-2"
               title="Send message"
             >
               <Send className="w-4 h-4" />
@@ -930,9 +945,9 @@ export default function ChatContainer({
           )}
         </form>
 
-        <div className="flex items-center justify-between text-[11px] text-gray-400 mt-2 px-1">
+        <div className="flex items-center justify-between text-xs text-gray-600 mt-2 px-1">
           <span className="flex items-center gap-1">
-            <Info className="w-3 h-3 text-gray-400" />
+            <Info className="w-3.5 h-3.5 text-gray-500" />
             Live sync with kitchen inventory
           </span>
           <span>Press Enter to send</span>

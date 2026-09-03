@@ -108,7 +108,7 @@ export default function AdminLoginPage() {
               <span className="inline-flex items-center gap-1 rounded-full bg-emerald-50 px-2.5 py-0.5 text-xs font-semibold text-emerald-700 ring-1 ring-emerald-600/20">
                 <CheckCircle2 className="w-3.5 h-3.5" /> Authenticated
               </span>
-              <span className="text-xs uppercase font-mono tracking-wider text-gray-500 bg-gray-100 px-2 py-0.5 rounded">
+              <span className="text-xs uppercase font-mono tracking-wider text-gray-700 bg-gray-100 px-2 py-0.5 rounded">
                 {currentUser.role}
               </span>
             </div>
@@ -123,10 +123,11 @@ export default function AdminLoginPage() {
           <button
             type="button"
             id="staff-logout-btn"
+            aria-label="Sign out of staff portal"
             onClick={handleLogout}
-            className="inline-flex items-center justify-center gap-2 rounded-lg border border-gray-300 bg-white px-4 py-2.5 text-sm font-medium text-gray-700 hover:bg-gray-50 transition-colors shadow-xs"
+            className="inline-flex items-center justify-center gap-2 rounded-lg border border-gray-300 bg-white px-4 py-2.5 text-sm font-medium text-gray-700 hover:bg-gray-50 transition-colors shadow-xs focus:outline-none focus:ring-2 focus:ring-gray-900 focus:ring-offset-2"
           >
-            <LogOut className="w-4 h-4 text-gray-500" />
+            <LogOut className="w-4 h-4 text-gray-600" />
             Sign Out
           </button>
         </div>
@@ -137,13 +138,14 @@ export default function AdminLoginPage() {
           <Link
             id="hub-link-kds"
             href="/admin/kds"
-            className="group relative flex flex-col rounded-2xl border border-gray-200 bg-white p-6 sm:p-8 shadow-xs hover:border-gray-900 hover:shadow-md transition-all"
+            aria-label="Open Kitchen Display System to monitor live orders"
+            className="group relative flex flex-col rounded-2xl border border-gray-200 bg-white p-6 sm:p-8 shadow-xs hover:border-gray-900 hover:shadow-md transition-all focus:outline-none focus:ring-2 focus:ring-gray-900 focus:ring-offset-2"
           >
             <div className="flex items-center justify-between mb-4">
               <div className="w-12 h-12 rounded-xl bg-orange-50 text-orange-600 flex items-center justify-center group-hover:bg-orange-600 group-hover:text-white transition-colors">
                 <ChefHat className="w-6 h-6" />
               </div>
-              <span className="text-xs font-semibold uppercase tracking-wider text-orange-600 bg-orange-50 px-2.5 py-1 rounded-full">
+              <span className="text-xs font-semibold uppercase tracking-wider text-orange-700 bg-orange-50 px-2.5 py-1 rounded-full">
                 Real-Time Queue
               </span>
             </div>
@@ -163,13 +165,14 @@ export default function AdminLoginPage() {
           <Link
             id="hub-link-manage"
             href="/admin/manage"
-            className="group relative flex flex-col rounded-2xl border border-gray-200 bg-white p-6 sm:p-8 shadow-xs hover:border-gray-900 hover:shadow-md transition-all"
+            aria-label="Open Inventory and 86 availability management"
+            className="group relative flex flex-col rounded-2xl border border-gray-200 bg-white p-6 sm:p-8 shadow-xs hover:border-gray-900 hover:shadow-md transition-all focus:outline-none focus:ring-2 focus:ring-gray-900 focus:ring-offset-2"
           >
             <div className="flex items-center justify-between mb-4">
               <div className="w-12 h-12 rounded-xl bg-indigo-50 text-indigo-600 flex items-center justify-center group-hover:bg-indigo-600 group-hover:text-white transition-colors">
                 <Layers className="w-6 h-6" />
               </div>
-              <span className="text-xs font-semibold uppercase tracking-wider text-indigo-600 bg-indigo-50 px-2.5 py-1 rounded-full">
+              <span className="text-xs font-semibold uppercase tracking-wider text-indigo-700 bg-indigo-50 px-2.5 py-1 rounded-full">
                 Live Menu Control
               </span>
             </div>
@@ -200,7 +203,8 @@ export default function AdminLoginPage() {
           <Link
             id="hub-link-kiosk"
             href="/menu"
-            className="w-full sm:w-auto text-center rounded-lg bg-gray-900 px-4 py-2 text-xs font-semibold text-white hover:bg-gray-800 transition-colors shadow-xs"
+            aria-label="Launch guest dining menu and AI concierge view"
+            className="w-full sm:w-auto text-center rounded-lg bg-gray-900 px-4 py-2 text-xs font-semibold text-white hover:bg-gray-800 transition-colors shadow-xs focus:outline-none focus:ring-2 focus:ring-gray-900 focus:ring-offset-2"
           >
             Launch Customer Menu
           </Link>
@@ -227,31 +231,37 @@ export default function AdminLoginPage() {
         </div>
 
         {/* Authentication Mode Switcher */}
-        <div className="flex rounded-lg bg-gray-100 p-1 mb-6">
+        <div className="flex rounded-lg bg-gray-100 p-1 mb-6" role="tablist" aria-label="Authentication mode selection">
           <button
             type="button"
+            role="tab"
+            aria-selected={authMode === 'password'}
+            aria-label="Email and password login mode"
             onClick={() => {
               setAuthMode('password');
               setError(null);
             }}
-            className={`flex-1 py-1.5 text-xs font-semibold rounded-md transition-all ${
+            className={`flex-1 py-1.5 text-xs font-semibold rounded-md transition-all focus:outline-none focus:ring-2 focus:ring-gray-900 ${
               authMode === 'password'
                 ? 'bg-white text-gray-900 shadow-xs'
-                : 'text-gray-600 hover:text-gray-900'
+                : 'text-gray-700 hover:text-gray-900'
             }`}
           >
             Email & Password
           </button>
           <button
             type="button"
+            role="tab"
+            aria-selected={authMode === 'pin'}
+            aria-label="Quick POS 4-digit PIN login mode"
             onClick={() => {
               setAuthMode('pin');
               setError(null);
             }}
-            className={`flex-1 py-1.5 text-xs font-semibold rounded-md transition-all ${
+            className={`flex-1 py-1.5 text-xs font-semibold rounded-md transition-all focus:outline-none focus:ring-2 focus:ring-gray-900 ${
               authMode === 'pin'
                 ? 'bg-white text-gray-900 shadow-xs'
-                : 'text-gray-600 hover:text-gray-900'
+                : 'text-gray-700 hover:text-gray-900'
             }`}
           >
             Quick POS PIN
@@ -260,7 +270,7 @@ export default function AdminLoginPage() {
 
         {/* Error Alert */}
         {error && (
-          <div className="mb-5 rounded-lg bg-rose-50 border border-rose-200 p-3.5 text-xs text-rose-700 flex items-start gap-2">
+          <div className="mb-5 rounded-lg bg-rose-50 border border-rose-200 p-3.5 text-xs text-rose-800 flex items-start gap-2">
             <AlertCircle className="w-4 h-4 flex-shrink-0 mt-0.5 text-rose-600" />
             <span>{error}</span>
           </div>
@@ -275,7 +285,7 @@ export default function AdminLoginPage() {
                   Staff Email
                 </label>
                 <div className="relative">
-                  <Mail className="w-4 h-4 absolute left-3.5 top-3 text-gray-400 pointer-events-none" />
+                  <Mail className="w-4 h-4 absolute left-3.5 top-3 text-gray-500 pointer-events-none" />
                   <input
                     type="email"
                     id="staff-email"
@@ -283,7 +293,7 @@ export default function AdminLoginPage() {
                     value={email}
                     onChange={(e) => setEmail(e.target.value)}
                     placeholder="admin@tabl.local"
-                    className="w-full rounded-lg border border-gray-300 pl-10 pr-3.5 py-2.5 text-sm text-gray-900 placeholder:text-gray-400 focus:border-gray-900 focus:ring-1 focus:ring-gray-900 focus:outline-none transition-colors"
+                    className="w-full rounded-lg border border-gray-300 pl-10 pr-3.5 py-2.5 text-sm text-gray-900 placeholder:text-gray-500 focus:border-gray-900 focus:ring-2 focus:ring-gray-900 focus:outline-none transition-colors"
                   />
                 </div>
               </div>
@@ -295,7 +305,7 @@ export default function AdminLoginPage() {
                   </label>
                 </div>
                 <div className="relative">
-                  <KeyRound className="w-4 h-4 absolute left-3.5 top-3 text-gray-400 pointer-events-none" />
+                  <KeyRound className="w-4 h-4 absolute left-3.5 top-3 text-gray-500 pointer-events-none" />
                   <input
                     type="password"
                     id="staff-password"
@@ -303,7 +313,7 @@ export default function AdminLoginPage() {
                     value={password}
                     onChange={(e) => setPassword(e.target.value)}
                     placeholder="••••••••"
-                    className="w-full rounded-lg border border-gray-300 pl-10 pr-3.5 py-2.5 text-sm text-gray-900 placeholder:text-gray-400 focus:border-gray-900 focus:ring-1 focus:ring-gray-900 focus:outline-none transition-colors"
+                    className="w-full rounded-lg border border-gray-300 pl-10 pr-3.5 py-2.5 text-sm text-gray-900 placeholder:text-gray-500 focus:border-gray-900 focus:ring-2 focus:ring-gray-900 focus:outline-none transition-colors"
                   />
                 </div>
               </div>
@@ -314,7 +324,7 @@ export default function AdminLoginPage() {
                 Staff 4-Digit Access PIN
               </label>
               <div className="relative">
-                <Key className="w-4 h-4 absolute left-3.5 top-3 text-gray-400 pointer-events-none" />
+                <Key className="w-4 h-4 absolute left-3.5 top-3 text-gray-500 pointer-events-none" />
                 <input
                   type="password"
                   id="staff-pin"
@@ -323,16 +333,17 @@ export default function AdminLoginPage() {
                   value={pin}
                   onChange={(e) => setPin(e.target.value)}
                   placeholder="1234"
-                  className="w-full text-center tracking-widest font-mono text-lg rounded-lg border border-gray-300 pl-10 pr-3.5 py-2 text-gray-900 placeholder:text-gray-400 focus:border-gray-900 focus:ring-1 focus:ring-gray-900 focus:outline-none transition-colors"
+                  className="w-full text-center tracking-widest font-mono text-lg rounded-lg border border-gray-300 pl-10 pr-3.5 py-2 text-gray-900 placeholder:text-gray-500 focus:border-gray-900 focus:ring-2 focus:ring-gray-900 focus:outline-none transition-colors"
                 />
               </div>
-              <p className="text-[11px] text-gray-500 mt-1 text-center">Default terminal PIN is <span className="font-mono font-bold text-gray-700">1234</span></p>
+              <p className="text-xs text-gray-600 mt-1 text-center">Default terminal PIN is <span className="font-mono font-bold text-gray-800">1234</span></p>
             </div>
           )}
 
           <button
             type="submit"
             id="staff-login-button"
+            aria-label="Sign in to staff admin dashboard"
             disabled={loading}
             className="w-full mt-3 rounded-lg bg-gray-900 px-4 py-2.5 text-sm font-semibold text-white shadow-xs hover:bg-gray-800 focus:outline-none focus:ring-2 focus:ring-gray-900 focus:ring-offset-2 transition-colors disabled:opacity-50 flex items-center justify-center gap-2"
           >
@@ -355,8 +366,9 @@ export default function AdminLoginPage() {
           <button
             type="button"
             id="fill-demo-credentials-btn"
+            aria-label="Auto-fill demo staff credentials"
             onClick={authMode === 'password' ? handleFillDemo : handleFillDemoPin}
-            className="inline-flex items-center gap-1.5 text-xs font-semibold text-gray-700 bg-gray-100 hover:bg-gray-200 px-3 py-1.5 rounded-full transition-colors"
+            className="inline-flex items-center gap-1.5 text-xs font-semibold text-gray-700 bg-gray-100 hover:bg-gray-200 px-3 py-1.5 rounded-full transition-colors focus:outline-none focus:ring-2 focus:ring-gray-900 focus:ring-offset-2"
           >
             <Sparkles className="w-3.5 h-3.5 text-amber-600" />
             {authMode === 'password' ? 'Auto-Fill Demo Credentials (admin@tabl.local / admin123)' : 'Auto-Fill Demo PIN (1234)'}

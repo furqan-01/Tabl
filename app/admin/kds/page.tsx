@@ -120,11 +120,12 @@ export default function KitchenDisplaySystemPage() {
           <Link
             id="kds-back-to-hub"
             href="/admin"
-            className="inline-flex items-center gap-1.5 text-xs font-semibold text-gray-600 hover:text-gray-900 bg-gray-100 hover:bg-gray-200 px-3 py-1.5 rounded-lg transition-colors"
+            aria-label="Back to staff hub"
+            className="inline-flex items-center gap-1.5 text-xs font-semibold text-gray-700 hover:text-gray-900 bg-gray-100 hover:bg-gray-200 px-3 py-1.5 rounded-lg transition-colors focus:outline-none focus:ring-2 focus:ring-gray-900 focus:ring-offset-2"
           >
             <ArrowLeft className="w-3.5 h-3.5" /> Staff Hub
           </Link>
-          <span className="text-gray-300">/</span>
+          <span className="text-gray-400">/</span>
           <h1 id="kds-title" className="text-xl sm:text-2xl font-bold tracking-tight text-gray-900">
             Kitchen Display System (KDS)
           </h1>
@@ -133,21 +134,23 @@ export default function KitchenDisplaySystemPage() {
         <div className="flex items-center gap-3">
           <button
             type="button"
+            aria-label={autoRefresh ? 'Pause live polling' : 'Resume live polling'}
             onClick={() => setAutoRefresh(!autoRefresh)}
-            className={`inline-flex items-center gap-1.5 rounded-lg px-3 py-1.5 text-xs font-semibold border transition-colors ${
+            className={`inline-flex items-center gap-1.5 rounded-lg px-3 py-1.5 text-xs font-semibold border transition-colors focus:outline-none focus:ring-2 focus:ring-gray-900 focus:ring-offset-2 ${
               autoRefresh
-                ? 'bg-emerald-50 text-emerald-700 border-emerald-200'
-                : 'bg-gray-100 text-gray-600 border-gray-200'
+                ? 'bg-emerald-50 text-emerald-800 border-emerald-300'
+                : 'bg-gray-100 text-gray-700 border-gray-200'
             }`}
           >
-            <span className={`w-2 h-2 rounded-full ${autoRefresh ? 'bg-emerald-500 animate-pulse' : 'bg-gray-400'}`} />
+            <span className={`w-2 h-2 rounded-full ${autoRefresh ? 'bg-emerald-600 animate-pulse' : 'bg-gray-500'}`} />
             {autoRefresh ? 'Live Polling Active' : 'Polling Paused'}
           </button>
 
           <button
             type="button"
+            aria-label="Refresh kitchen orders manually"
             onClick={() => fetchOrders()}
-            className="inline-flex items-center gap-1.5 rounded-lg border border-gray-300 bg-white px-3 py-1.5 text-xs font-semibold text-gray-700 hover:bg-gray-50 transition-colors shadow-2xs"
+            className="inline-flex items-center gap-1.5 rounded-lg border border-gray-300 bg-white px-3 py-1.5 text-xs font-semibold text-gray-700 hover:bg-gray-50 transition-colors shadow-2xs focus:outline-none focus:ring-2 focus:ring-gray-900 focus:ring-offset-2"
           >
             <RefreshCw className={`w-3.5 h-3.5 ${loading ? 'animate-spin' : ''}`} />
             Refresh
@@ -156,7 +159,8 @@ export default function KitchenDisplaySystemPage() {
           <Link
             id="kds-link-manage"
             href="/admin/manage"
-            className="inline-flex items-center gap-1.5 rounded-lg bg-gray-900 px-3 py-1.5 text-xs font-semibold text-white hover:bg-gray-800 transition-colors shadow-xs"
+            aria-label="Navigate to inventory 86 management"
+            className="inline-flex items-center gap-1.5 rounded-lg bg-gray-900 px-3 py-1.5 text-xs font-semibold text-white hover:bg-gray-800 transition-colors shadow-xs focus:outline-none focus:ring-2 focus:ring-gray-900 focus:ring-offset-2"
           >
             <Layers className="w-3.5 h-3.5" />
             Inventory 86
@@ -166,7 +170,7 @@ export default function KitchenDisplaySystemPage() {
 
       {/* Active Filter Tabs & Counts */}
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-6">
-        <div className="flex items-center gap-2 overflow-x-auto pb-1 sm:pb-0">
+        <div className="flex items-center gap-2 overflow-x-auto pb-1 sm:pb-0" role="tablist" aria-label="Filter orders by stage">
           {[
             { key: 'active', label: 'Active Queue', count: activeOrders.length },
             { key: 'pending', label: 'New / Pending', count: orders.filter((o) => o.status === 'pending').length },
@@ -177,8 +181,11 @@ export default function KitchenDisplaySystemPage() {
             <button
               key={tab.key}
               type="button"
+              role="tab"
+              aria-selected={filterStatus === tab.key}
+              aria-label={`Filter by ${tab.label}, ${tab.count} orders`}
               onClick={() => setFilterStatus(tab.key)}
-              className={`px-3.5 py-1.5 rounded-lg text-xs font-semibold flex items-center gap-2 transition-all ${
+              className={`px-3.5 py-1.5 rounded-lg text-xs font-semibold flex items-center gap-2 transition-all focus:outline-none focus:ring-2 focus:ring-gray-900 focus:ring-offset-2 ${
                 filterStatus === tab.key
                   ? 'bg-gray-900 text-white shadow-2xs'
                   : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
@@ -186,10 +193,10 @@ export default function KitchenDisplaySystemPage() {
             >
               <span>{tab.label}</span>
               <span
-                className={`px-1.5 py-0.2 rounded-full text-[10px] ${
+                className={`px-1.5 py-0.5 rounded-full text-xs font-mono ${
                   filterStatus === tab.key
-                    ? 'bg-gray-800 text-gray-200'
-                    : 'bg-gray-200 text-gray-700'
+                    ? 'bg-gray-800 text-gray-100'
+                    : 'bg-gray-200 text-gray-800'
                 }`}
               >
                 {tab.count}
@@ -198,7 +205,7 @@ export default function KitchenDisplaySystemPage() {
           ))}
         </div>
 
-        <div className="text-xs text-gray-500 font-medium flex items-center gap-1.5">
+        <div className="text-xs text-gray-600 font-medium flex items-center gap-1.5">
           <Clock className="w-3.5 h-3.5" />
           <span>Orders update automatically in real-time</span>
         </div>
@@ -207,9 +214,9 @@ export default function KitchenDisplaySystemPage() {
       {/* Ticket Grid */}
       {displayedOrders.length === 0 ? (
         <div className="rounded-2xl border border-dashed border-gray-300 bg-white p-12 text-center">
-          <ChefHat className="w-12 h-12 text-gray-300 mx-auto mb-3" />
+          <ChefHat className="w-12 h-12 text-gray-400 mx-auto mb-3" />
           <h3 className="text-base font-semibold text-gray-900">No tickets in this view</h3>
-          <p className="text-xs text-gray-500 max-w-sm mx-auto mt-1">
+          <p className="text-xs text-gray-600 max-w-sm mx-auto mt-1">
             Incoming table orders placed from the customer kiosk will appear here instantly.
           </p>
         </div>
@@ -226,7 +233,7 @@ export default function KitchenDisplaySystemPage() {
                 {/* Ticket Header */}
                 <div className="border-b border-gray-100 bg-gray-50/90 px-4 py-3 flex items-center justify-between">
                   <div>
-                    <span className="font-mono text-xs font-bold text-gray-400">
+                    <span className="font-mono text-xs font-bold text-gray-600">
                       #{order.id.slice(-6).toUpperCase()}
                     </span>
                     <h3 className="font-bold text-gray-900 text-base flex items-center gap-1.5">
@@ -235,11 +242,11 @@ export default function KitchenDisplaySystemPage() {
                     </h3>
                   </div>
                   <div className="text-right">
-                    <span className="text-xs text-gray-500 font-mono block">
+                    <span className="text-xs text-gray-600 font-mono block">
                       {formatTime(order.createdAt)}
                     </span>
                     <span
-                      className={`inline-block border px-2 py-0.5 rounded text-[11px] font-bold uppercase tracking-wider mt-1 ${getStatusColor(
+                      className={`inline-block border px-2 py-0.5 rounded text-xs font-bold uppercase tracking-wider mt-1 ${getStatusColor(
                         order.status
                       )}`}
                     >
@@ -265,13 +272,13 @@ export default function KitchenDisplaySystemPage() {
                               {item.name}
                             </span>
                             {item.notes && (
-                              <p className="text-xs text-amber-700 bg-amber-50 rounded px-1.5 py-0.5 mt-0.5">
+                              <p className="text-xs text-amber-800 bg-amber-50 rounded px-1.5 py-0.5 mt-0.5">
                                 Note: {item.notes}
                               </p>
                             )}
                           </div>
                         </div>
-                        <span className="font-mono text-xs text-gray-500">
+                        <span className="font-mono text-xs text-gray-600">
                           Rs. {(item.price * item.quantity).toFixed(0)}
                         </span>
                       </li>
@@ -288,8 +295,8 @@ export default function KitchenDisplaySystemPage() {
 
                 {/* Bill Summary & Payment Status */}
                 <div className="px-4 py-2.5 bg-gray-50/60 border-t border-gray-100 flex items-center justify-between text-xs">
-                  <div className="flex items-center gap-1 text-gray-600 font-medium">
-                    <CreditCard className="w-3.5 h-3.5 text-gray-500" />
+                  <div className="flex items-center gap-1 text-gray-700 font-medium">
+                    <CreditCard className="w-3.5 h-3.5 text-gray-600" />
                     <span>Pay at Table:</span>
                     <span className="font-semibold text-gray-900">
                       {order.paymentStatus === 'paid' ? 'Paid' : 'Pay to Waiter'}
@@ -305,9 +312,10 @@ export default function KitchenDisplaySystemPage() {
                   {order.status === 'pending' && (
                     <button
                       type="button"
+                      aria-label={`Start preparing order for Table ${order.tableNumber}`}
                       disabled={isUpdating}
                       onClick={() => handleUpdateStatus(order.id, 'preparing')}
-                      className="flex-1 rounded-lg bg-blue-600 py-2 text-xs font-bold text-white hover:bg-blue-700 transition-colors shadow-2xs disabled:opacity-50"
+                      className="flex-1 rounded-lg bg-blue-600 py-2 text-xs font-bold text-white hover:bg-blue-700 transition-colors shadow-2xs disabled:opacity-50 focus:outline-none focus:ring-2 focus:ring-blue-600 focus:ring-offset-2"
                     >
                       {isUpdating ? 'Updating...' : 'Start Preparing'}
                     </button>
@@ -316,9 +324,10 @@ export default function KitchenDisplaySystemPage() {
                   {order.status === 'preparing' && (
                     <button
                       type="button"
+                      aria-label={`Mark order ready to serve for Table ${order.tableNumber}`}
                       disabled={isUpdating}
                       onClick={() => handleUpdateStatus(order.id, 'ready')}
-                      className="flex-1 rounded-lg bg-emerald-600 py-2 text-xs font-bold text-white hover:bg-emerald-700 transition-colors shadow-2xs disabled:opacity-50"
+                      className="flex-1 rounded-lg bg-emerald-600 py-2 text-xs font-bold text-white hover:bg-emerald-700 transition-colors shadow-2xs disabled:opacity-50 focus:outline-none focus:ring-2 focus:ring-emerald-600 focus:ring-offset-2"
                     >
                       {isUpdating ? 'Updating...' : 'Mark Ready to Serve'}
                     </button>
@@ -327,16 +336,17 @@ export default function KitchenDisplaySystemPage() {
                   {order.status === 'ready' && (
                     <button
                       type="button"
+                      aria-label={`Complete and close ticket for Table ${order.tableNumber}`}
                       disabled={isUpdating}
                       onClick={() => handleUpdateStatus(order.id, 'completed')}
-                      className="flex-1 rounded-lg bg-gray-900 py-2 text-xs font-bold text-white hover:bg-gray-800 transition-colors shadow-2xs disabled:opacity-50"
+                      className="flex-1 rounded-lg bg-gray-900 py-2 text-xs font-bold text-white hover:bg-gray-800 transition-colors shadow-2xs disabled:opacity-50 focus:outline-none focus:ring-2 focus:ring-gray-900 focus:ring-offset-2"
                     >
                       {isUpdating ? 'Updating...' : 'Complete & Close Ticket'}
                     </button>
                   )}
 
                   {order.status === 'completed' && (
-                    <div className="w-full text-center py-1.5 text-xs text-gray-400 font-medium flex items-center justify-center gap-1">
+                    <div className="w-full text-center py-1.5 text-xs text-gray-500 font-medium flex items-center justify-center gap-1">
                       <CheckCircle2 className="w-4 h-4 text-emerald-600" />
                       Order Fulfilled
                     </div>
