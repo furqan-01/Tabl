@@ -161,7 +161,7 @@ function DishCard({
         <button
           type="button"
           id={`add-to-cart-gen-${dish.id}`}
-          aria-label={`Add ${dish.name} to table cart`}
+          aria-label={added ? "Added to Table Cart!" : "+ Add to Cart"}
           onClick={handleAdd}
           className={`w-full inline-flex items-center justify-center gap-1.5 rounded-lg py-1.5 px-3 text-xs font-semibold transition-all shadow-2xs focus:outline-none focus:ring-2 focus:ring-gray-900 focus:ring-offset-2 ${
             added
@@ -330,7 +330,7 @@ function ToolInvocationRenderer({
             <button
               type="button"
               id="generative-reset-filters-btn"
-              aria-label="Reset active search filters"
+              aria-label="Reset Filters"
               onClick={onResetFilters}
               className="inline-flex items-center gap-1 rounded-lg bg-white px-2.5 py-1 text-xs font-semibold text-amber-900 border border-amber-300 hover:bg-amber-100 transition-colors shadow-2xs focus:outline-none focus:ring-2 focus:ring-amber-500 focus:ring-offset-2"
             >
@@ -637,23 +637,23 @@ export default function ChatContainer({
       {/* Concierge Header Bar */}
       <header
         id="concierge-header"
-        className="flex items-center justify-between px-4 py-3.5 border-b border-gray-200 bg-gray-900 text-white shrink-0"
+        className="flex items-center justify-between px-5 py-4 border-b border-white/10 bg-[#0A0C13] text-white shrink-0 shadow-md"
       >
-        <div className="flex items-center space-x-3 min-w-0">
-          <div className="w-8 h-8 rounded-lg bg-amber-400/10 border border-amber-400/20 flex items-center justify-center text-amber-400 flex-shrink-0">
-            <Sparkles className="w-4 h-4" />
+        <div className="flex items-center space-x-3.5 min-w-0">
+          <div className="w-9 h-9 rounded-xl bg-gradient-to-br from-amber-400 to-amber-600 text-slate-950 flex items-center justify-center font-bold flex-shrink-0 shadow-glow-amber">
+            <Sparkles className="w-5 h-5 text-slate-950" />
           </div>
           <div className="min-w-0">
             <div className="flex items-center gap-2">
-              <h2 id="concierge-title" className="text-sm font-bold text-white tracking-tight truncate">
+              <h2 id="concierge-title" className="text-sm font-bold text-white tracking-wider uppercase font-display truncate">
                 Tabl Concierge
               </h2>
-              <span className="inline-flex items-center gap-1 rounded-full bg-emerald-500/20 px-2 py-0.5 text-xs font-semibold text-emerald-300 ring-1 ring-inset ring-emerald-500/30 shrink-0">
+              <span className="inline-flex items-center gap-1 rounded-full bg-emerald-500/20 px-2 py-0.5 text-[10px] font-bold text-emerald-300 ring-1 ring-inset ring-emerald-500/30 shrink-0">
                 <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse" />
-                Live Kitchen
+                Live Sync
               </span>
             </div>
-            <p className="text-xs text-gray-300 truncate">Generative Menu & Dietary AI Advisor</p>
+            <p className="text-[11px] text-white/60 truncate">Dietary, Allergens & Custom Pairings</p>
           </div>
         </div>
 
@@ -664,7 +664,7 @@ export default function ChatContainer({
             aria-label="Reset conversation and clear chat history"
             onClick={handleClearHistory}
             title="Reset conversation"
-            className="p-1.5 text-gray-300 hover:text-white rounded-md hover:bg-white/10 transition-colors focus:outline-none focus:ring-2 focus:ring-amber-400 focus:ring-offset-2 focus:ring-offset-gray-900"
+            className="p-2 text-white/60 hover:text-white rounded-lg hover:bg-white/10 transition-colors focus:outline-none focus:ring-2 focus:ring-amber-400"
           >
             <Trash2 className="w-4 h-4" />
           </button>
@@ -675,7 +675,7 @@ export default function ChatContainer({
               id="concierge-close-btn"
               onClick={onClose}
               aria-label="Close AI concierge"
-              className="p-1.5 text-gray-300 hover:text-white rounded-md hover:bg-white/10 transition-colors focus:outline-none focus:ring-2 focus:ring-amber-400 focus:ring-offset-2 focus:ring-offset-gray-900"
+              className="p-2 text-white/60 hover:text-white rounded-lg hover:bg-white/10 transition-colors focus:outline-none focus:ring-2 focus:ring-amber-400"
             >
               <X className="w-5 h-5" />
             </button>

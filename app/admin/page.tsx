@@ -16,6 +16,9 @@ import {
   CheckCircle2,
   Sparkles,
   Key,
+  Utensils,
+  Database,
+  ExternalLink,
 } from 'lucide-react';
 
 export default function AdminLoginPage() {
@@ -100,35 +103,35 @@ export default function AdminLoginPage() {
   // If user is authenticated, display Staff Dashboard Hub
   if (currentUser) {
     return (
-      <div id="admin-dashboard-hub" className="w-full max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 py-8 sm:py-12">
+      <div id="admin-dashboard-hub" className="w-full max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-10 sm:py-14">
         {/* Top Welcome Bar */}
-        <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 border-b border-gray-200 pb-6 mb-8">
+        <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 border-b border-gray-200/80 pb-6 mb-10">
           <div>
-            <div className="flex items-center space-x-2">
-              <span className="inline-flex items-center gap-1 rounded-full bg-emerald-50 px-2.5 py-0.5 text-xs font-semibold text-emerald-700 ring-1 ring-emerald-600/20">
-                <CheckCircle2 className="w-3.5 h-3.5" /> Authenticated
+            <div className="flex items-center space-x-2.5">
+              <span className="inline-flex items-center gap-1 rounded-full bg-emerald-50 px-2.5 py-0.5 text-[11px] font-bold text-emerald-800 ring-1 ring-emerald-600/20">
+                <CheckCircle2 className="w-3.5 h-3.5 text-emerald-600" /> Authenticated Staff
               </span>
-              <span className="text-xs uppercase font-mono tracking-wider text-gray-700 bg-gray-100 px-2 py-0.5 rounded">
+              <span className="text-[10px] uppercase font-mono font-bold tracking-wider text-amber-900 bg-amber-50 px-2.5 py-0.5 rounded-md border border-amber-200">
                 {currentUser.role}
               </span>
             </div>
-            <h1 id="admin-hub-title" className="text-2xl sm:text-3xl font-bold tracking-tight text-gray-900 mt-2">
+            <h1 id="admin-hub-title" className="text-2xl sm:text-3xl font-display font-black tracking-tight text-gray-950 mt-2">
               Welcome back, {currentUser.name}
             </h1>
-            <p className="text-sm text-gray-600 mt-1">
-              Logged in as <span className="font-medium text-gray-800">{currentUser.email}</span>
+            <p className="text-xs text-gray-600 mt-1">
+              Active staff session: <span className="font-semibold text-gray-900">{currentUser.email}</span>
             </p>
           </div>
 
           <button
             type="button"
             id="staff-logout-btn"
-            aria-label="Sign out of staff portal"
+            aria-label="Sign Out"
             onClick={handleLogout}
-            className="inline-flex items-center justify-center gap-2 rounded-lg border border-gray-300 bg-white px-4 py-2.5 text-sm font-medium text-gray-700 hover:bg-gray-50 transition-colors shadow-xs focus:outline-none focus:ring-2 focus:ring-gray-900 focus:ring-offset-2"
+            className="inline-flex items-center justify-center gap-2 rounded-xl border border-gray-300 bg-white px-5 py-2.5 text-xs font-bold text-gray-800 hover:bg-gray-50 transition-colors shadow-xs focus:outline-none focus:ring-2 focus:ring-amber-500"
           >
             <LogOut className="w-4 h-4 text-gray-600" />
-            Sign Out
+            <span>Sign Out</span>
           </button>
         </div>
 
@@ -139,74 +142,81 @@ export default function AdminLoginPage() {
             id="hub-link-kds"
             href="/admin/kds"
             aria-label="Open Kitchen Display System to monitor live orders"
-            className="group relative flex flex-col rounded-2xl border border-gray-200 bg-white p-6 sm:p-8 shadow-xs hover:border-gray-900 hover:shadow-md transition-all focus:outline-none focus:ring-2 focus:ring-gray-900 focus:ring-offset-2"
+            className="group relative flex flex-col justify-between rounded-3xl border border-gray-200/80 bg-white p-7 shadow-luxury hover:shadow-luxury-hover hover:border-amber-400 transition-all focus:outline-none focus:ring-2 focus:ring-amber-500"
           >
-            <div className="flex items-center justify-between mb-4">
-              <div className="w-12 h-12 rounded-xl bg-orange-50 text-orange-600 flex items-center justify-center group-hover:bg-orange-600 group-hover:text-white transition-colors">
-                <ChefHat className="w-6 h-6" />
+            <div>
+              <div className="flex items-center justify-between mb-5">
+                <div className="w-14 h-14 rounded-2xl bg-orange-50 border border-orange-200 text-orange-700 flex items-center justify-center group-hover:scale-105 transition-transform">
+                  <ChefHat className="w-7 h-7" />
+                </div>
+                <span className="text-[10px] font-bold uppercase tracking-wider text-orange-800 bg-orange-50 px-2.5 py-1 rounded-full border border-orange-200">
+                  Real-Time Queue
+                </span>
               </div>
-              <span className="text-xs font-semibold uppercase tracking-wider text-orange-700 bg-orange-50 px-2.5 py-1 rounded-full">
-                Real-Time Queue
-              </span>
+              <h2 className="text-xl font-display font-bold text-gray-950 group-hover:text-amber-950 transition-colors">
+                Kitchen Display System (KDS)
+              </h2>
+              <p className="text-xs text-gray-600 mt-2 leading-relaxed">
+                Live color-coded ticket line. Advance table tickets through Pending, Cooking, Ready to Serve, and Fulfilled stages.
+              </p>
             </div>
-            <h2 className="text-xl font-bold text-gray-900 group-hover:text-black">
-              Kitchen Display System (KDS)
-            </h2>
-            <p className="text-sm text-gray-600 mt-2 flex-1">
-              Monitor incoming table orders in real time, advance tickets through kitchen prep stages, and verify table payment status.
-            </p>
-            <div className="flex items-center gap-2 text-sm font-semibold text-gray-900 mt-6 pt-4 border-t border-gray-100">
-              Open Kitchen Screen
-              <ArrowRight className="w-4 h-4 transition-transform group-hover:translate-x-1" />
+
+            <div className="mt-8 pt-5 border-t border-gray-100 flex items-center justify-between text-xs font-bold text-gray-950 group-hover:text-amber-700">
+              <span>Launch Chef Display Screen</span>
+              <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
             </div>
           </Link>
 
-          {/* Card 2: Inventory & 86 Manager */}
+          {/* Card 2: 86 Inventory & Dish Control */}
           <Link
             id="hub-link-manage"
             href="/admin/manage"
-            aria-label="Open Inventory and 86 availability management"
-            className="group relative flex flex-col rounded-2xl border border-gray-200 bg-white p-6 sm:p-8 shadow-xs hover:border-gray-900 hover:shadow-md transition-all focus:outline-none focus:ring-2 focus:ring-gray-900 focus:ring-offset-2"
+            aria-label="Open Inventory & 86 Management to toggle stock status"
+            className="group relative flex flex-col justify-between rounded-3xl border border-gray-200/80 bg-white p-7 shadow-luxury hover:shadow-luxury-hover hover:border-amber-400 transition-all focus:outline-none focus:ring-2 focus:ring-amber-500"
           >
-            <div className="flex items-center justify-between mb-4">
-              <div className="w-12 h-12 rounded-xl bg-indigo-50 text-indigo-600 flex items-center justify-center group-hover:bg-indigo-600 group-hover:text-white transition-colors">
-                <Layers className="w-6 h-6" />
+            <div>
+              <div className="flex items-center justify-between mb-5">
+                <div className="w-14 h-14 rounded-2xl bg-indigo-50 border border-indigo-200 text-indigo-800 flex items-center justify-center group-hover:scale-105 transition-transform">
+                  <Layers className="w-7 h-7" />
+                </div>
+                <span className="text-[10px] font-bold uppercase tracking-wider text-indigo-900 bg-indigo-50 px-2.5 py-1 rounded-full border border-indigo-200">
+                  Instant Stock Control
+                </span>
               </div>
-              <span className="text-xs font-semibold uppercase tracking-wider text-indigo-700 bg-indigo-50 px-2.5 py-1 rounded-full">
-                Live Menu Control
-              </span>
+              <h2 className="text-xl font-display font-bold text-gray-950 group-hover:text-amber-950 transition-colors">
+                Inventory & 86 Dish Manager
+              </h2>
+              <p className="text-xs text-gray-600 mt-2 leading-relaxed">
+                Instantly mark sold-out dishes offline. Sync with the live customer kiosk and AI Concierge in real-time.
+              </p>
             </div>
-            <h2 className="text-xl font-bold text-gray-900 group-hover:text-black">
-              Inventory & 86 Availability
-            </h2>
-            <p className="text-sm text-gray-600 mt-2 flex-1">
-              Instant 86/out-of-stock toggling synced directly to both the customer kiosk and the AI menu concierge, plus new dish creation.
-            </p>
-            <div className="flex items-center gap-2 text-sm font-semibold text-gray-900 mt-6 pt-4 border-t border-gray-100">
-              Manage Live Catalog
-              <ArrowRight className="w-4 h-4 transition-transform group-hover:translate-x-1" />
+
+            <div className="mt-8 pt-5 border-t border-gray-100 flex items-center justify-between text-xs font-bold text-gray-950 group-hover:text-amber-700">
+              <span>Open Catalog & 86 Manager</span>
+              <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
             </div>
           </Link>
         </div>
 
-        {/* Customer Experience Quick Access */}
-        <div className="rounded-xl border border-gray-200 bg-gray-50/70 p-5 flex flex-col sm:flex-row items-center justify-between gap-4">
+        {/* Guest Dining Preview Banner */}
+        <div className="rounded-3xl border border-amber-300/60 bg-gradient-to-r from-amber-50/90 via-white to-sky-50/50 p-6 flex flex-col sm:flex-row sm:items-center justify-between gap-4 shadow-sm">
           <div className="flex items-center gap-3">
-            <div className="w-10 h-10 rounded-lg bg-gray-200 flex items-center justify-center text-gray-700">
-              <UtensilsCrossed className="w-5 h-5" />
+            <div className="w-10 h-10 rounded-xl bg-amber-400 text-slate-950 flex items-center justify-center font-bold">
+              <Utensils className="w-5 h-5" />
             </div>
             <div>
-              <h3 className="text-sm font-semibold text-gray-900">Dining Kiosk & AI Chat View</h3>
-              <p className="text-xs text-gray-600">Test the guest ordering interface as seen by restaurant patrons.</p>
+              <h3 className="text-sm font-bold text-gray-950">Guest Table Kiosk Experience</h3>
+              <p className="text-xs text-gray-600">Simulate customer orders, AI Concierge questions, and cart submission.</p>
             </div>
           </div>
           <Link
             id="hub-link-kiosk"
             href="/menu"
             aria-label="Launch guest dining menu and AI concierge view"
-            className="w-full sm:w-auto text-center rounded-lg bg-gray-900 px-4 py-2 text-xs font-semibold text-white hover:bg-gray-800 transition-colors shadow-xs focus:outline-none focus:ring-2 focus:ring-gray-900 focus:ring-offset-2"
+            className="w-full sm:w-auto inline-flex items-center justify-center gap-2 rounded-xl bg-gray-950 hover:bg-black px-6 py-3 text-xs font-extrabold uppercase tracking-wider text-white transition-all shadow-xs focus:outline-none focus:ring-2 focus:ring-amber-500"
           >
-            Launch Customer Menu
+            <span>Launch Customer Menu</span>
+            <ExternalLink className="w-3.5 h-3.5 text-amber-400" />
           </Link>
         </div>
       </div>
@@ -215,53 +225,50 @@ export default function AdminLoginPage() {
 
   // Otherwise, render interactive Login Form
   return (
-    <div id="admin-login-page" className="flex flex-1 items-center justify-center px-4 py-12 sm:px-6 lg:px-8 bg-gray-50/50">
-      <div id="admin-login-card" className="w-full max-w-md rounded-2xl border border-gray-200 bg-white p-8 shadow-sm">
+    <div id="admin-login-page" className="flex flex-1 items-center justify-center px-4 py-16 sm:px-6 lg:px-8 bg-[#FAF9F5]">
+      <div id="admin-login-card" className="w-full max-w-md rounded-3xl border border-gray-200/80 bg-white p-8 sm:p-9 shadow-luxury">
         {/* Header Badge & Title */}
-        <div className="mb-6 text-center">
-          <div className="inline-flex items-center justify-center w-12 h-12 rounded-xl bg-gray-900 text-white mb-3 shadow-xs">
+        <div className="mb-7 text-center">
+          <div className="inline-flex items-center justify-center w-14 h-14 rounded-2xl bg-[#0A0C13] text-amber-400 mb-4 shadow-glow-amber">
             <Lock className="w-6 h-6" />
           </div>
-          <h1 id="admin-login-title" className="text-2xl font-bold tracking-tight text-gray-900">
+          <h1 id="admin-login-title" className="text-2xl font-display font-extrabold tracking-tight text-gray-950">
             Tabl Staff Portal
           </h1>
-          <p className="mt-1 text-sm text-gray-600">
+          <p className="mt-1.5 text-xs text-gray-600 leading-relaxed">
             Sign in to manage live inventory, 86 statuses, and the Kitchen Display System.
           </p>
         </div>
 
         {/* Authentication Mode Switcher */}
-        <div className="flex rounded-lg bg-gray-100 p-1 mb-6" role="tablist" aria-label="Authentication mode selection">
+        <div className="flex rounded-xl bg-gray-100 p-1.5 mb-6" aria-label="Authentication mode selection">
           <button
             type="button"
-            role="tab"
-            aria-selected={authMode === 'password'}
-            aria-label="Email and password login mode"
+            id="auth-mode-email-btn"
             onClick={() => {
               setAuthMode('password');
               setError(null);
             }}
-            className={`flex-1 py-1.5 text-xs font-semibold rounded-md transition-all focus:outline-none focus:ring-2 focus:ring-gray-900 ${
+            className={`flex-1 py-2 text-xs font-bold rounded-lg transition-all focus:outline-none focus:ring-2 focus:ring-amber-500 ${
               authMode === 'password'
-                ? 'bg-white text-gray-900 shadow-xs'
-                : 'text-gray-700 hover:text-gray-900'
+                ? 'bg-white text-gray-950 shadow-xs'
+                : 'text-gray-600 hover:text-gray-950'
             }`}
           >
-            Email & Password
+            Email &amp; Password
           </button>
           <button
             type="button"
-            role="tab"
-            aria-selected={authMode === 'pin'}
-            aria-label="Quick POS 4-digit PIN login mode"
+            id="auth-mode-pin-btn"
+            aria-label="Quick POS PIN"
             onClick={() => {
               setAuthMode('pin');
               setError(null);
             }}
-            className={`flex-1 py-1.5 text-xs font-semibold rounded-md transition-all focus:outline-none focus:ring-2 focus:ring-gray-900 ${
+            className={`flex-1 py-2 text-xs font-bold rounded-lg transition-all focus:outline-none focus:ring-2 focus:ring-amber-500 ${
               authMode === 'pin'
-                ? 'bg-white text-gray-900 shadow-xs'
-                : 'text-gray-700 hover:text-gray-900'
+                ? 'bg-white text-gray-950 shadow-xs'
+                : 'text-gray-600 hover:text-gray-950'
             }`}
           >
             Quick POS PIN
@@ -270,7 +277,7 @@ export default function AdminLoginPage() {
 
         {/* Error Alert */}
         {error && (
-          <div className="mb-5 rounded-lg bg-rose-50 border border-rose-200 p-3.5 text-xs text-rose-800 flex items-start gap-2">
+          <div className="mb-5 rounded-xl bg-rose-50 border border-rose-200 p-3.5 text-xs text-rose-800 flex items-start gap-2.5">
             <AlertCircle className="w-4 h-4 flex-shrink-0 mt-0.5 text-rose-600" />
             <span>{error}</span>
           </div>
@@ -281,11 +288,11 @@ export default function AdminLoginPage() {
           {authMode === 'password' ? (
             <>
               <div>
-                <label htmlFor="staff-email" className="block text-xs font-semibold uppercase tracking-wider text-gray-700 mb-1.5">
+                <label htmlFor="staff-email" className="block text-xs font-bold uppercase tracking-wider text-gray-700 mb-1.5">
                   Staff Email
                 </label>
                 <div className="relative">
-                  <Mail className="w-4 h-4 absolute left-3.5 top-3 text-gray-500 pointer-events-none" />
+                  <Mail className="w-4 h-4 absolute left-3.5 top-3.5 text-gray-400 pointer-events-none" />
                   <input
                     type="email"
                     id="staff-email"
@@ -293,19 +300,19 @@ export default function AdminLoginPage() {
                     value={email}
                     onChange={(e) => setEmail(e.target.value)}
                     placeholder="admin@tabl.local"
-                    className="w-full rounded-lg border border-gray-300 pl-10 pr-3.5 py-2.5 text-sm text-gray-900 placeholder:text-gray-500 focus:border-gray-900 focus:ring-2 focus:ring-gray-900 focus:outline-none transition-colors"
+                    className="w-full rounded-xl border border-gray-200 pl-10 pr-3.5 py-2.5 text-sm text-gray-900 placeholder:text-gray-400 focus:border-gray-950 focus:ring-2 focus:ring-gray-950 focus:outline-none bg-gray-50/50"
                   />
                 </div>
               </div>
 
               <div>
                 <div className="flex items-center justify-between mb-1.5">
-                  <label htmlFor="staff-password" className="block text-xs font-semibold uppercase tracking-wider text-gray-700">
+                  <label htmlFor="staff-password" className="block text-xs font-bold uppercase tracking-wider text-gray-700">
                     Password
                   </label>
                 </div>
                 <div className="relative">
-                  <KeyRound className="w-4 h-4 absolute left-3.5 top-3 text-gray-500 pointer-events-none" />
+                  <KeyRound className="w-4 h-4 absolute left-3.5 top-3.5 text-gray-400 pointer-events-none" />
                   <input
                     type="password"
                     id="staff-password"
@@ -313,18 +320,18 @@ export default function AdminLoginPage() {
                     value={password}
                     onChange={(e) => setPassword(e.target.value)}
                     placeholder="••••••••"
-                    className="w-full rounded-lg border border-gray-300 pl-10 pr-3.5 py-2.5 text-sm text-gray-900 placeholder:text-gray-500 focus:border-gray-900 focus:ring-2 focus:ring-gray-900 focus:outline-none transition-colors"
+                    className="w-full rounded-xl border border-gray-200 pl-10 pr-3.5 py-2.5 text-sm text-gray-900 placeholder:text-gray-400 focus:border-gray-950 focus:ring-2 focus:ring-gray-950 focus:outline-none bg-gray-50/50"
                   />
                 </div>
               </div>
             </>
           ) : (
             <div>
-              <label htmlFor="staff-pin" className="block text-xs font-semibold uppercase tracking-wider text-gray-700 mb-1.5">
+              <label htmlFor="staff-pin" className="block text-xs font-bold uppercase tracking-wider text-gray-700 mb-1.5">
                 Staff 4-Digit Access PIN
               </label>
               <div className="relative">
-                <Key className="w-4 h-4 absolute left-3.5 top-3 text-gray-500 pointer-events-none" />
+                <Key className="w-4 h-4 absolute left-3.5 top-3.5 text-gray-400 pointer-events-none" />
                 <input
                   type="password"
                   id="staff-pin"
@@ -333,45 +340,45 @@ export default function AdminLoginPage() {
                   value={pin}
                   onChange={(e) => setPin(e.target.value)}
                   placeholder="1234"
-                  className="w-full text-center tracking-widest font-mono text-lg rounded-lg border border-gray-300 pl-10 pr-3.5 py-2 text-gray-900 placeholder:text-gray-500 focus:border-gray-900 focus:ring-2 focus:ring-gray-900 focus:outline-none transition-colors"
+                  className="w-full text-center tracking-widest font-mono text-xl rounded-xl border border-gray-200 pl-10 pr-3.5 py-2.5 text-gray-900 placeholder:text-gray-400 focus:border-gray-950 focus:ring-2 focus:ring-gray-950 focus:outline-none bg-gray-50/50"
                 />
               </div>
-              <p className="text-xs text-gray-600 mt-1 text-center">Default terminal PIN is <span className="font-mono font-bold text-gray-800">1234</span></p>
+              <p className="text-xs text-gray-500 mt-1.5 text-center">Default terminal PIN is <span className="font-mono font-bold text-gray-800">1234</span></p>
             </div>
           )}
 
           <button
             type="submit"
             id="staff-login-button"
-            aria-label="Sign in to staff admin dashboard"
+            aria-label="Sign In to Admin Dashboard"
             disabled={loading}
-            className="w-full mt-3 rounded-lg bg-gray-900 px-4 py-2.5 text-sm font-semibold text-white shadow-xs hover:bg-gray-800 focus:outline-none focus:ring-2 focus:ring-gray-900 focus:ring-offset-2 transition-colors disabled:opacity-50 flex items-center justify-center gap-2"
+            className="w-full mt-4 rounded-xl bg-gray-950 hover:bg-black px-4 py-3 text-xs font-black uppercase tracking-wider text-white shadow-md transition-all disabled:opacity-50 flex items-center justify-center gap-2 focus:outline-none focus:ring-2 focus:ring-amber-500"
           >
             {loading ? (
               <>
                 <div className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin" />
-                Verifying Credentials...
+                <span>Verifying Credentials...</span>
               </>
             ) : (
               <>
-                <ShieldCheck className="w-4 h-4" />
-                Sign In to Admin Dashboard
+                <ShieldCheck className="w-4 h-4 text-amber-400" />
+                <span>Sign In to Admin Dashboard</span>
               </>
             )}
           </button>
         </form>
 
         {/* Demo Quick-Fill Helper */}
-        <div className="mt-6 pt-5 border-t border-gray-100 text-center">
+        <div className="mt-7 pt-5 border-t border-gray-100 text-center">
           <button
             type="button"
             id="fill-demo-credentials-btn"
             aria-label="Auto-fill demo staff credentials"
             onClick={authMode === 'password' ? handleFillDemo : handleFillDemoPin}
-            className="inline-flex items-center gap-1.5 text-xs font-semibold text-gray-700 bg-gray-100 hover:bg-gray-200 px-3 py-1.5 rounded-full transition-colors focus:outline-none focus:ring-2 focus:ring-gray-900 focus:ring-offset-2"
+            className="inline-flex items-center gap-1.5 text-xs font-bold text-gray-700 bg-gray-100 hover:bg-gray-200 px-3.5 py-2 rounded-xl transition-colors focus:outline-none focus:ring-2 focus:ring-amber-500"
           >
             <Sparkles className="w-3.5 h-3.5 text-amber-600" />
-            {authMode === 'password' ? 'Auto-Fill Demo Credentials (admin@tabl.local / admin123)' : 'Auto-Fill Demo PIN (1234)'}
+            <span>{authMode === 'password' ? 'Auto-Fill Demo Credentials (admin@tabl.local / admin123)' : 'Auto-Fill Demo PIN (1234)'}</span>
           </button>
         </div>
       </div>

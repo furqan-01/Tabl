@@ -1,9 +1,50 @@
+@import url('https://fonts.googleapis.com/css2?family=Cinzel:wght@500;600;700;800;900&family=Outfit:wght@300;400;500;600;700;800&family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600;700&display=swap');
+
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
 
-body {
-  @apply bg-gray-100 text-gray-900;
+@layer base {
+  body {
+    @apply bg-[#FAFAF7] text-[#12131A] font-sans antialiased selection:bg-amber-100 selection:text-amber-900;
+  }
+
+  h1, h2, h3 {
+    @apply font-heading tracking-tight;
+  }
+}
+
+/* Ambient glow & backdrop enhancements */
+.bg-radial-luxury {
+  background: radial-gradient(circle at 50% 0%, rgba(212, 169, 69, 0.08) 0%, rgba(250, 250, 247, 0) 70%);
+}
+
+.bg-radial-dark {
+  background: radial-gradient(circle at 50% 0%, rgba(212, 169, 69, 0.15) 0%, rgba(15, 17, 26, 0.98) 75%);
+}
+
+.glass-surface {
+  background: rgba(255, 255, 255, 0.85);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border: 1px solid rgba(226, 232, 240, 0.8);
+}
+
+.glass-surface-dark {
+  background: rgba(15, 17, 26, 0.88);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.gold-gradient-text {
+  background: linear-gradient(135deg, #7a5225 0%, #b88931 50%, #d4a945 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+.gold-gradient-bg {
+  background: linear-gradient(135deg, #171923 0%, #08090e 100%);
 }
 
 /* Elegant custom scrollbar for chat message area */
@@ -11,27 +52,26 @@ body {
   overscroll-behavior: contain;
   -webkit-overflow-scrolling: touch;
   scrollbar-width: thin;
-  scrollbar-color: #9ca3af #f3f4f6;
+  scrollbar-color: #cbd5e1 #f8fafc;
 }
 
 .chat-scroll-area::-webkit-scrollbar {
-  width: 8px;
-  height: 8px;
+  width: 6px;
+  height: 6px;
 }
 
 .chat-scroll-area::-webkit-scrollbar-track {
-  background: #f3f4f6;
+  background: #f8fafc;
   border-radius: 9999px;
 }
 
 .chat-scroll-area::-webkit-scrollbar-thumb {
-  background-color: #9ca3af;
+  background-color: #cbd5e1;
   border-radius: 9999px;
-  border: 2px solid #f3f4f6;
 }
 
 .chat-scroll-area::-webkit-scrollbar-thumb:hover {
-  background-color: #6b7280;
+  background-color: #94a3b8;
 }
 
 /* Hide scrollbar for clean chip/tag rows */

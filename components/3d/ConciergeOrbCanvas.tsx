@@ -45,7 +45,7 @@ export function OrbMesh({ isHovered, onClick, onHoverChange }: OrbMeshProps) {
 
     // Smooth hover scale interpolation
     if (orbGroupRef.current && orbGroupRef.current.scale && typeof orbGroupRef.current.scale.lerp === 'function') {
-      const targetScale = isHovered ? 1.15 : 1.0;
+      const targetScale = isHovered ? 1.05 : 0.95;
       orbGroupRef.current.scale.lerp(
         new THREE.Vector3(targetScale, targetScale, targetScale),
         delta * 8
@@ -82,13 +82,13 @@ export function OrbMesh({ isHovered, onClick, onHoverChange }: OrbMeshProps) {
   };
 
   return (
-    <group ref={orbGroupRef}>
-      {/* Floating oscillation wrapper */}
-      <Float speed={2.5} rotationIntensity={0.5} floatIntensity={0.6}>
+    <group ref={orbGroupRef} position={[0, 0, 0]}>
+      {/* Gentle floating oscillation that keeps orb firmly centered */}
+      <Float speed={1.8} rotationIntensity={0.2} floatIntensity={0.1}>
         {/* Core Sleek Metallic Orb (Sphere primitive from drei) */}
         <Sphere
           ref={coreRef}
-          args={[0.85, 64, 64]}
+          args={[0.75, 64, 64]}
           onClick={handleClick}
           onPointerOver={handlePointerOver}
           onPointerOut={handlePointerOut}
@@ -104,7 +104,7 @@ export function OrbMesh({ isHovered, onClick, onHoverChange }: OrbMeshProps) {
         {/* Futuristic Orbital Ring (Torus primitive) */}
         <Torus
           ref={ringRef}
-          args={[1.15, 0.025, 16, 64]}
+          args={[1.0, 0.025, 16, 64]}
           onClick={handleClick}
           onPointerOver={handlePointerOver}
           onPointerOut={handlePointerOut}
@@ -121,7 +121,7 @@ export function OrbMesh({ isHovered, onClick, onHoverChange }: OrbMeshProps) {
         {/* Outer Geometric Wireframe Lattice (Icosahedron primitive from drei) */}
         <Icosahedron
           ref={outerLatticeRef}
-          args={[1.05, 1]}
+          args={[0.92, 1]}
           onClick={handleClick}
           onPointerOver={handlePointerOver}
           onPointerOut={handlePointerOut}
@@ -159,9 +159,9 @@ export default function ConciergeOrbCanvas({
     <Suspense fallback={<OrbLoadingFallback />}>
       <Canvas
         dpr={[1, 2]}
-        camera={{ position: [0, 0, 2.8], fov: 45 }}
+        camera={{ position: [0, 0, 3.2], fov: 45 }}
         gl={{ antialias: true, alpha: true }}
-        style={{ pointerEvents: 'auto', width: '100%', height: '100%' }}
+        style={{ pointerEvents: 'auto', width: '100%', height: '100%', display: 'block' }}
       >
         {/* Multi-point studio lighting - zero network dependencies for instantaneous rendering */}
         <ambientLight intensity={0.7} />

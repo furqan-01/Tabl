@@ -1,6 +1,6 @@
 {
   "name": "Tabl",
-  "description": "Smart Menu Kiosk contactless ordering application",
+  "description": "Haute Gastronomy contactless dining platform with real-time AI Concierge, live 86 inventory control, and Kitchen Display System.",
   "requestFramePermissions": [],
   "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
 }

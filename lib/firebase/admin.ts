@@ -1,5 +1,6 @@
 import { App, getApps, initializeApp, cert, applicationDefault } from 'firebase-admin/app';
 import { Firestore, getFirestore } from 'firebase-admin/firestore';
+import config from '@/firebase-applet-config.json';
 
 let adminApp: App | null = null;
 let adminDb: Firestore | null = null;
@@ -83,7 +84,12 @@ export function getAdminDb(): Firestore | null {
   }
 
   try {
-    adminDb = getFirestore(app);
+    const dbId = process.env.FIRESTORE_DATABASE_ID || config.firestoreDatabaseId;
+    if (dbId && dbId !== '(default)') {
+      adminDb = getFirestore(app, dbId);
+    } else {
+      adminDb = getFirestore(app);
+    }
     return adminDb;
   } catch (error) {
     console.error('[Firebase Admin] Firestore initialization error:', error);

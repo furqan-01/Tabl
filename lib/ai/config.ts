@@ -12,8 +12,8 @@ import { createGoogleGenerativeAI } from '@ai-sdk/google';
 
 // Model candidates sorted by quota limits, latency, quality, and availability
 export const GEMINI_CHAT_MODELS = [
-  'gemini-3.5-flash-lite',
-  'gemini-3.5-flash',
+  'gemini-2.5-flash',
+  'gemini-2.5-flash-lite',
 ] as const;
 
 // Hyperparameters for menu recommendation and deterministic reasoning

@@ -18,6 +18,11 @@ import {
   Tag,
   Flame,
   Check,
+  ToggleLeft,
+  ToggleRight,
+  Utensils,
+  Leaf,
+  Wheat,
 } from 'lucide-react';
 import { MenuItem } from '@/types/restaurant';
 
@@ -99,17 +104,13 @@ export default function MenuManagementPage() {
         },
         body: JSON.stringify({ isAvailable: updatedStatus }),
       });
+
       if (!res.ok) {
-        const data = await res.json().catch(() => ({}));
-        throw new Error(data.error || 'Failed to update status on server');
+        throw new Error('Failed to update dish availability');
       }
-    } catch (err: any) {
-      console.error('Toggle error:', err);
-      // Revert on error
-      setItems((prev) =>
-        prev.map((i) => (i.id === item.id ? { ...i, isAvailable: !updatedStatus } : i))
-      );
-      alert(err.message || 'Could not update item availability. Please log in to staff portal.');
+    } catch (err) {
+      console.error('Toggle availability error:', err);
+      fetchMenu();
     } finally {
       setTogglingId(null);
     }
@@ -117,23 +118,20 @@ export default function MenuManagementPage() {
 
   const handleAddDish = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (!newDishName || !newDishPrice) return;
+    if (!newDishName.trim() || !newDishPrice) return;
 
     setAddingDish(true);
     try {
-      const newItem: MenuItem = {
-        id: `dish-${Date.now()}`,
+      const payload = {
         name: newDishName.trim(),
         category: newDishCategory,
-        price: parseFloat(newDishPrice) || 0,
+        price: parseFloat(newDishPrice),
         description: newDishDesc.trim(),
-        isVegetarian: newDishVeg,
+        spiceLevel: newDishSpice,
+        isVegetarian: newDishVeg || newDishVegan,
         isVegan: newDishVegan,
         isGlutenFree: newDishGlutenFree,
-        spiceLevel: newDishSpice,
         isAvailable: true,
-        ingredients: [],
-        allergens: [],
       };
 
       const res = await fetch('/api/menu/add', {
@@ -142,7 +140,7 @@ export default function MenuManagementPage() {
           'Content-Type': 'application/json',
           ...getAuthHeader(),
         },
-        body: JSON.stringify(newItem),
+        body: JSON.stringify(payload),
       });
 
       const data = await res.json();
@@ -150,9 +148,7 @@ export default function MenuManagementPage() {
         throw new Error(data.error || 'Failed to add dish');
       }
 
-      setItems((prev) => [newItem, ...prev]);
       setShowAddModal(false);
-      // Reset form
       setNewDishName('');
       setNewDishPrice('');
       setNewDishDesc('');
@@ -160,8 +156,9 @@ export default function MenuManagementPage() {
       setNewDishVeg(false);
       setNewDishVegan(false);
       setNewDishGlutenFree(false);
+      fetchMenu();
     } catch (err: any) {
-      alert(err.message || 'Failed to add dish. Please verify staff login.');
+      alert(err.message || 'Error adding dish');
     } finally {
       setAddingDish(false);
     }
@@ -169,10 +166,11 @@ export default function MenuManagementPage() {
 
   const handleScrapeMenu = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (!scrapeUrl) return;
+    if (!scrapeUrl.trim()) return;
 
     setScraping(true);
     setScrapeFeedback(null);
+
     try {
       const res = await fetch('/api/menu/scrape', {
         method: 'POST',
@@ -188,14 +186,8 @@ export default function MenuManagementPage() {
         throw new Error(data.error || 'Scraping failed');
       }
 
-      setScrapeFeedback(`Successfully scraped ${data.count || 0} items from ${scrapeUrl}`);
-      // Refresh menu
-      await fetchMenu();
-      setTimeout(() => {
-        setShowScrapeModal(false);
-        setScrapeFeedback(null);
-        setScrapeUrl('');
-      }, 1500);
+      setScrapeFeedback(`Scraped ${data.count || 0} items successfully!`);
+      fetchMenu();
     } catch (err: any) {
       setScrapeFeedback(`Error: ${err.message}`);
     } finally {
@@ -216,51 +208,51 @@ export default function MenuManagementPage() {
   return (
     <div id="manage-page" className="w-full max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 sm:py-10">
       {/* Top Staff Navigation Header */}
-      <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 border-b border-gray-200 pb-5 mb-8">
+      <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 border-b border-gray-200/80 pb-6 mb-8">
         <div className="flex items-center space-x-3">
           <Link
             id="back-to-admin-btn"
             href="/admin"
             aria-label="Back to staff hub"
-            className="inline-flex items-center gap-1.5 text-xs font-semibold text-gray-700 hover:text-gray-900 bg-gray-100 hover:bg-gray-200 px-3 py-1.5 rounded-lg transition-colors focus:outline-none focus:ring-2 focus:ring-gray-900 focus:ring-offset-2"
+            className="inline-flex items-center gap-1.5 text-xs font-bold text-gray-700 hover:text-gray-950 bg-white border border-gray-200 px-3.5 py-2 rounded-xl shadow-2xs hover:bg-gray-50 transition-colors focus:outline-none focus:ring-2 focus:ring-amber-500"
           >
             <ArrowLeft className="w-3.5 h-3.5" /> Staff Hub
           </Link>
-          <span className="text-gray-400">/</span>
-          <h1 id="manage-title" className="text-xl sm:text-2xl font-bold tracking-tight text-gray-900">
-            Inventory & 86 Control
+          <span className="text-gray-300 font-bold">/</span>
+          <h1 id="manage-title" className="text-xl sm:text-2xl font-display font-extrabold tracking-tight text-gray-950">
+            Inventory & 86 Dish Control
           </h1>
         </div>
 
-        <div className="flex items-center gap-2">
+        <div className="flex items-center gap-3 flex-wrap">
           <Link
             id="nav-to-kds"
             href="/admin/kds"
             aria-label="Navigate to Kitchen Display Screen"
-            className="inline-flex items-center gap-1.5 rounded-lg border border-gray-300 bg-white px-3.5 py-2 text-xs font-semibold text-gray-700 hover:bg-gray-50 transition-colors shadow-2xs focus:outline-none focus:ring-2 focus:ring-gray-900 focus:ring-offset-2"
+            className="inline-flex items-center gap-1.5 rounded-xl border border-gray-200 bg-white px-4 py-2 text-xs font-bold text-gray-800 hover:bg-gray-50 transition-colors shadow-2xs focus:outline-none focus:ring-2 focus:ring-amber-500"
           >
             <ChefHat className="w-4 h-4 text-orange-600" />
-            Kitchen Display (KDS)
+            <span>Kitchen Display (KDS)</span>
           </Link>
           <button
             type="button"
             id="open-add-dish-btn"
             aria-label="Open dialog to add new dish"
             onClick={() => setShowAddModal(true)}
-            className="inline-flex items-center gap-1.5 rounded-lg bg-gray-900 px-3.5 py-2 text-xs font-semibold text-white hover:bg-gray-800 transition-colors shadow-xs focus:outline-none focus:ring-2 focus:ring-gray-900 focus:ring-offset-2"
+            className="inline-flex items-center gap-1.5 rounded-xl bg-gray-950 px-4 py-2 text-xs font-bold text-white hover:bg-black transition-all shadow-xs focus:outline-none focus:ring-2 focus:ring-amber-500"
           >
-            <Plus className="w-4 h-4" />
-            Add New Dish
+            <Plus className="w-4 h-4 text-amber-400" />
+            <span>Add New Dish</span>
           </button>
           <button
             type="button"
             id="open-scrape-modal-btn"
             aria-label="Open dialog to sync menu from URL"
             onClick={() => setShowScrapeModal(true)}
-            className="inline-flex items-center gap-1.5 rounded-lg border border-gray-300 bg-white px-3.5 py-2 text-xs font-semibold text-gray-700 hover:bg-gray-50 transition-colors shadow-2xs focus:outline-none focus:ring-2 focus:ring-gray-900 focus:ring-offset-2"
+            className="inline-flex items-center gap-1.5 rounded-xl border border-gray-200 bg-white px-4 py-2 text-xs font-bold text-gray-800 hover:bg-gray-50 transition-colors shadow-2xs focus:outline-none focus:ring-2 focus:ring-amber-500"
           >
-            <Globe className="w-4 h-4 text-blue-600" />
-            Sync URL
+            <Globe className="w-4 h-4 text-sky-600" />
+            <span>Sync URL</span>
           </button>
         </div>
       </div>
@@ -269,15 +261,15 @@ export default function MenuManagementPage() {
       <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4 mb-6">
         {/* Search */}
         <div className="relative flex-1 max-w-md">
-          <Search className="w-4 h-4 absolute left-3.5 top-3 text-gray-500 pointer-events-none" />
+          <Search className="w-4 h-4 absolute left-3.5 top-3 text-gray-400 pointer-events-none" />
           <input
             type="text"
             id="inventory-search-input"
             aria-label="Search menu items by name or ingredients"
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
-            placeholder="Search menu items by name or ingredients..."
-            className="w-full rounded-xl border border-gray-300 pl-10 pr-4 py-2 text-sm text-gray-900 placeholder:text-gray-500 focus:border-gray-900 focus:ring-2 focus:ring-gray-900 focus:outline-none bg-white"
+            placeholder="Search catalog by name or description..."
+            className="w-full rounded-xl border border-gray-200 pl-10 pr-4 py-2.5 text-sm text-gray-900 placeholder:text-gray-400 focus:border-gray-950 focus:ring-2 focus:ring-gray-950 focus:outline-none bg-white shadow-inner"
           />
         </div>
 
@@ -291,10 +283,10 @@ export default function MenuManagementPage() {
               aria-selected={selectedCategory === cat}
               aria-label={`Filter inventory by ${cat}`}
               onClick={() => setSelectedCategory(cat)}
-              className={`px-3 py-1.5 rounded-lg text-xs font-medium whitespace-nowrap transition-colors focus:outline-none focus:ring-2 focus:ring-gray-900 focus:ring-offset-2 ${
+              className={`px-3.5 py-2 rounded-xl text-xs font-bold whitespace-nowrap transition-colors focus:outline-none focus:ring-2 focus:ring-amber-500 ${
                 selectedCategory === cat
-                  ? 'bg-gray-900 text-white shadow-2xs'
-                  : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
+                  ? 'bg-gray-950 text-white shadow-xs'
+                  : 'bg-white border border-gray-200 text-gray-700 hover:bg-gray-100 hover:text-gray-950'
               }`}
             >
               {cat}
@@ -306,11 +298,11 @@ export default function MenuManagementPage() {
       {/* Inventory Table Container */}
       <div
         id="inventory-table-container"
-        className="rounded-2xl border border-gray-200 bg-white shadow-xs overflow-hidden"
+        className="rounded-3xl border border-gray-200/80 bg-white shadow-luxury overflow-hidden"
       >
         <div className="overflow-x-auto">
           <table className="w-full text-left text-sm text-gray-700" aria-label="Restaurant inventory items">
-            <thead className="border-b border-gray-200 bg-gray-50/80 text-xs uppercase font-semibold text-gray-700 tracking-wider">
+            <thead className="border-b border-gray-200 bg-gray-50/80 text-[11px] uppercase font-bold text-gray-600 tracking-wider">
               <tr>
                 <th scope="col" className="px-6 py-4">Item & Description</th>
                 <th scope="col" className="px-6 py-4">Category</th>
@@ -323,14 +315,14 @@ export default function MenuManagementPage() {
             <tbody className="divide-y divide-gray-100">
               {loading ? (
                 <tr>
-                  <td colSpan={6} className="px-6 py-12 text-center text-sm text-gray-600">
-                    <RefreshCw className="w-5 h-5 animate-spin mx-auto mb-2 text-gray-500" />
+                  <td colSpan={6} className="px-6 py-14 text-center text-xs text-gray-500">
+                    <RefreshCw className="w-6 h-6 animate-spin mx-auto mb-2 text-amber-600" />
                     Loading catalog items...
                   </td>
                 </tr>
               ) : filteredItems.length === 0 ? (
                 <tr>
-                  <td colSpan={6} className="px-6 py-12 text-center text-sm text-gray-600">
+                  <td colSpan={6} className="px-6 py-14 text-center text-xs text-gray-500">
                     No matching items found.
                   </td>
                 </tr>
@@ -340,11 +332,11 @@ export default function MenuManagementPage() {
                     key={item.id}
                     id={`inventory-row-${item.id}`}
                     className={`hover:bg-gray-50/75 transition-colors ${
-                      !item.isAvailable ? 'bg-rose-50/20 opacity-85' : ''
+                      !item.isAvailable ? 'bg-rose-50/20 opacity-80' : ''
                     }`}
                   >
                     <td className="px-6 py-4">
-                      <div className="font-semibold text-gray-900">{item.name}</div>
+                      <div className="font-bold text-gray-950">{item.name}</div>
                       {item.description && (
                         <p className="text-xs text-gray-600 line-clamp-1 max-w-sm mt-0.5">
                           {item.description}
@@ -352,72 +344,65 @@ export default function MenuManagementPage() {
                       )}
                     </td>
                     <td className="px-6 py-4">
-                      <span className="inline-block rounded-md bg-gray-100 px-2 py-0.5 text-xs font-medium text-gray-700">
-                        {item.category}
+                      <span className="text-[11px] font-bold uppercase tracking-wider text-gray-700 bg-gray-100 px-2.5 py-1 rounded-md">
+                        {item.category || 'Mains'}
                       </span>
                     </td>
-                    <td className="px-6 py-4 font-mono font-medium text-gray-900">
+                    <td className="px-6 py-4 font-mono font-bold text-gray-950">
                       Rs. {typeof item.price === 'number' ? item.price.toFixed(0) : item.price}
                     </td>
                     <td className="px-6 py-4">
-                      <div className="flex items-center gap-1.5">
+                      <div className="flex items-center gap-1.5 flex-wrap">
                         {item.isVegetarian && (
-                          <span className="text-xs font-bold uppercase bg-emerald-100 text-emerald-800 px-1.5 py-0.5 rounded">
+                          <span className="text-[10px] font-bold bg-emerald-50 text-emerald-800 border border-emerald-300 px-1.5 py-0.5 rounded">
                             Veg
                           </span>
                         )}
                         {item.isVegan && (
-                          <span className="text-xs font-bold uppercase bg-green-100 text-green-800 px-1.5 py-0.5 rounded">
+                          <span className="text-[10px] font-bold bg-green-50 text-green-800 border border-green-300 px-1.5 py-0.5 rounded">
                             Vegan
                           </span>
                         )}
+                        {item.isGlutenFree && (
+                          <span className="text-[10px] font-bold bg-amber-50 text-amber-800 border border-amber-300 px-1.5 py-0.5 rounded">
+                            GF
+                          </span>
+                        )}
                         {item.spiceLevel ? (
-                          <span className="text-xs font-bold flex items-center bg-amber-100 text-amber-800 px-1.5 py-0.5 rounded">
-                            <Flame className="w-3 h-3 mr-0.5 text-red-500" /> {item.spiceLevel}
+                          <span className="text-[10px] font-bold bg-red-50 text-red-800 border border-red-300 px-1.5 py-0.5 rounded flex items-center gap-0.5">
+                            <Flame className="w-3 h-3 text-red-600 fill-current" />
+                            {item.spiceLevel}
                           </span>
                         ) : null}
-                        {!item.isVegetarian && !item.isVegan && !item.spiceLevel && (
-                          <span className="text-xs text-gray-500">—</span>
-                        )}
                       </div>
                     </td>
                     <td className="px-6 py-4">
-                      <span
-                        className={`inline-flex items-center gap-1 rounded-full px-2.5 py-1 text-xs font-semibold ${
-                          item.isAvailable
-                            ? 'bg-emerald-50 text-emerald-700 ring-1 ring-emerald-600/20'
-                            : 'bg-rose-50 text-rose-700 ring-1 ring-rose-600/20'
-                        }`}
-                      >
-                        {item.isAvailable ? (
-                          <>
-                            <CheckCircle className="w-3.5 h-3.5" /> In Stock
-                          </>
-                        ) : (
-                          <>
-                            <XCircle className="w-3.5 h-3.5" /> 86&apos;d / Out
-                          </>
-                        )}
-                      </span>
+                      {item.isAvailable ? (
+                        <span className="inline-flex items-center gap-1.5 rounded-full bg-emerald-50 px-2.5 py-0.5 text-xs font-bold text-emerald-800 ring-1 ring-emerald-600/20">
+                          <CheckCircle className="w-3.5 h-3.5 text-emerald-600" />
+                          In Stock
+                        </span>
+                      ) : (
+                        <span className="inline-flex items-center gap-1.5 rounded-full bg-rose-50 px-2.5 py-0.5 text-xs font-bold text-rose-800 ring-1 ring-rose-600/20">
+                          <XCircle className="w-3.5 h-3.5 text-rose-600" />
+                          86&apos;d Out
+                        </span>
+                      )}
                     </td>
                     <td className="px-6 py-4 text-right">
                       <button
                         type="button"
-                        id={`toggle-item-${item.id}`}
-                        aria-label={item.isAvailable ? `Mark ${item.name} as out of stock (86 item)` : `Restore ${item.name} to available in stock`}
+                        id={`toggle-86-${item.id}`}
+                        aria-label={`Toggle availability for ${item.name}`}
                         disabled={togglingId === item.id}
                         onClick={() => handleToggleAvailability(item)}
-                        className={`rounded-lg px-3.5 py-1.5 text-xs font-semibold transition-all shadow-2xs focus:outline-none focus:ring-2 focus:ring-gray-900 focus:ring-offset-2 ${
+                        className={`inline-flex items-center gap-1.5 rounded-xl px-3.5 py-1.5 text-xs font-bold transition-all shadow-2xs focus:outline-none focus:ring-2 focus:ring-amber-500 ${
                           item.isAvailable
-                            ? 'border border-rose-200 bg-white text-rose-700 hover:bg-rose-50'
-                            : 'border border-emerald-200 bg-white text-emerald-700 hover:bg-emerald-50'
+                            ? 'bg-rose-50 text-rose-800 border border-rose-300 hover:bg-rose-100'
+                            : 'bg-emerald-50 text-emerald-800 border border-emerald-300 hover:bg-emerald-100'
                         }`}
                       >
-                        {togglingId === item.id
-                          ? 'Updating...'
-                          : item.isAvailable
-                          ? '86 Item'
-                          : 'Restore Stock'}
+                        {item.isAvailable ? '86 Dish' : 'Restore Stock'}
                       </button>
                     </td>
                   </tr>
@@ -430,15 +415,15 @@ export default function MenuManagementPage() {
 
       {/* Add New Dish Modal */}
       {showAddModal && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 p-4" role="dialog" aria-modal="true" aria-labelledby="add-dish-modal-title">
-          <div className="w-full max-w-lg rounded-2xl bg-white p-6 shadow-xl">
-            <div className="flex items-center justify-between border-b border-gray-100 pb-3 mb-4">
-              <h3 id="add-dish-modal-title" className="text-lg font-bold text-gray-900">Add Menu Item</h3>
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 p-4 backdrop-blur-xs" role="dialog" aria-modal="true" aria-labelledby="modal-title">
+          <div className="w-full max-w-lg rounded-3xl bg-white p-7 shadow-2xl border border-gray-200 animate-in zoom-in-95 duration-200">
+            <div className="flex items-center justify-between border-b border-gray-100 pb-4 mb-5">
+              <h3 id="modal-title" className="text-lg font-display font-extrabold text-gray-950">Add Dish to Menu</h3>
               <button
                 type="button"
-                aria-label="Close add menu item modal"
+                aria-label="Close modal"
                 onClick={() => setShowAddModal(false)}
-                className="text-gray-500 hover:text-gray-700 text-sm font-medium focus:outline-none focus:ring-2 focus:ring-gray-900 rounded p-1"
+                className="text-gray-400 hover:text-gray-700 text-sm font-bold focus:outline-none rounded p-1"
               >
                 ✕
               </button>
@@ -446,105 +431,104 @@ export default function MenuManagementPage() {
 
             <form onSubmit={handleAddDish} className="space-y-4">
               <div>
-                <label htmlFor="add-dish-name" className="block text-xs font-semibold text-gray-700 mb-1">Item Name</label>
+                <label htmlFor="dish-name" className="block text-xs font-bold uppercase tracking-wider text-gray-700 mb-1">Dish Name</label>
                 <input
-                  id="add-dish-name"
+                  id="dish-name"
                   type="text"
                   required
                   value={newDishName}
                   onChange={(e) => setNewDishName(e.target.value)}
-                  placeholder="e.g. Garlic Butter Naan or Chicken Tikka"
-                  className="w-full rounded-lg border border-gray-300 px-3 py-2 text-sm text-gray-900 placeholder:text-gray-500 focus:border-gray-900 focus:ring-2 focus:ring-gray-900 focus:outline-none"
+                  placeholder="e.g. Saffron Risotto with Wild Mushrooms"
+                  className="w-full rounded-xl border border-gray-200 px-3.5 py-2.5 text-sm text-gray-900 placeholder:text-gray-400 focus:border-gray-950 focus:ring-2 focus:ring-gray-950 focus:outline-none bg-gray-50/50"
                 />
               </div>
 
-              <div className="grid grid-cols-2 gap-3">
+              <div className="grid grid-cols-2 gap-4">
                 <div>
-                  <label htmlFor="add-dish-category" className="block text-xs font-semibold text-gray-700 mb-1">Category</label>
+                  <label htmlFor="dish-category" className="block text-xs font-bold uppercase tracking-wider text-gray-700 mb-1">Category</label>
                   <select
-                    id="add-dish-category"
+                    id="dish-category"
                     value={newDishCategory}
                     onChange={(e) => setNewDishCategory(e.target.value)}
-                    className="w-full rounded-lg border border-gray-300 px-3 py-2 text-sm text-gray-900 focus:border-gray-900 focus:ring-2 focus:ring-gray-900 focus:outline-none"
+                    className="w-full rounded-xl border border-gray-200 px-3.5 py-2.5 text-sm text-gray-900 focus:border-gray-950 focus:ring-2 focus:ring-gray-950 focus:outline-none bg-gray-50/50"
                   >
+                    <option value="Starters">Starters</option>
                     <option value="Mains">Mains</option>
-                    <option value="Appetizers">Appetizers</option>
-                    <option value="Burgers & Sandwiches">Burgers & Sandwiches</option>
-                    <option value="Sides">Sides</option>
-                    <option value="Beverages">Beverages</option>
                     <option value="Desserts">Desserts</option>
+                    <option value="Beverages">Beverages</option>
+                    <option value="Specials">Specials</option>
                   </select>
                 </div>
 
                 <div>
-                  <label htmlFor="add-dish-price" className="block text-xs font-semibold text-gray-700 mb-1">Price (Rs.)</label>
+                  <label htmlFor="dish-price" className="block text-xs font-bold uppercase tracking-wider text-gray-700 mb-1">Price (Rs.)</label>
                   <input
-                    id="add-dish-price"
+                    id="dish-price"
                     type="number"
-                    step="1"
                     required
+                    min="1"
                     value={newDishPrice}
                     onChange={(e) => setNewDishPrice(e.target.value)}
-                    placeholder="e.g. 450"
-                    className="w-full rounded-lg border border-gray-300 px-3 py-2 text-sm text-gray-900 placeholder:text-gray-500 focus:border-gray-900 focus:ring-2 focus:ring-gray-900 focus:outline-none"
+                    placeholder="450"
+                    className="w-full rounded-xl border border-gray-200 px-3.5 py-2.5 text-sm text-gray-900 placeholder:text-gray-400 focus:border-gray-950 focus:ring-2 focus:ring-gray-950 focus:outline-none bg-gray-50/50"
                   />
                 </div>
               </div>
 
               <div>
-                <label htmlFor="add-dish-desc" className="block text-xs font-semibold text-gray-700 mb-1">Description</label>
+                <label htmlFor="dish-description" className="block text-xs font-bold uppercase tracking-wider text-gray-700 mb-1">Description & Ingredients</label>
                 <textarea
-                  id="add-dish-desc"
-                  rows={2}
+                  id="dish-description"
+                  rows={3}
                   value={newDishDesc}
                   onChange={(e) => setNewDishDesc(e.target.value)}
                   placeholder="Fresh ingredients, prep style, and flavor notes..."
-                  className="w-full rounded-lg border border-gray-300 px-3 py-2 text-sm text-gray-900 placeholder:text-gray-500 focus:border-gray-900 focus:ring-2 focus:ring-gray-900 focus:outline-none"
+                  className="w-full rounded-xl border border-gray-200 px-3.5 py-2.5 text-sm text-gray-900 placeholder:text-gray-400 focus:border-gray-950 focus:ring-2 focus:ring-gray-950 focus:outline-none bg-gray-50/50"
                 />
               </div>
 
               <div className="flex flex-wrap gap-4 pt-1">
-                <label className="inline-flex items-center text-xs text-gray-700 cursor-pointer">
+                <label className="inline-flex items-center text-xs font-bold text-gray-800 cursor-pointer">
                   <input
                     type="checkbox"
                     checked={newDishVeg}
                     onChange={(e) => setNewDishVeg(e.target.checked)}
-                    className="rounded text-gray-900 mr-2 focus:ring-2 focus:ring-gray-900"
+                    className="rounded text-gray-950 mr-2 focus:ring-2 focus:ring-amber-500"
                   />
                   Vegetarian
                 </label>
-                <label className="inline-flex items-center text-xs text-gray-700 cursor-pointer">
+                <label className="inline-flex items-center text-xs font-bold text-gray-800 cursor-pointer">
                   <input
                     type="checkbox"
                     checked={newDishVegan}
                     onChange={(e) => setNewDishVegan(e.target.checked)}
-                    className="rounded text-gray-900 mr-2 focus:ring-2 focus:ring-gray-900"
+                    className="rounded text-gray-950 mr-2 focus:ring-2 focus:ring-amber-500"
                   />
                   Vegan
                 </label>
-                <label className="inline-flex items-center text-xs text-gray-700 cursor-pointer">
+                <label className="inline-flex items-center text-xs font-bold text-gray-800 cursor-pointer">
                   <input
                     type="checkbox"
                     checked={newDishGlutenFree}
                     onChange={(e) => setNewDishGlutenFree(e.target.checked)}
-                    className="rounded text-gray-900 mr-2 focus:ring-2 focus:ring-gray-900"
+                    className="rounded text-gray-950 mr-2 focus:ring-2 focus:ring-amber-500"
                   />
                   Gluten Free
                 </label>
               </div>
 
-              <div className="flex justify-end gap-2 pt-4 border-t border-gray-100">
+              <div className="flex justify-end gap-3 pt-4 border-t border-gray-100">
                 <button
                   type="button"
                   onClick={() => setShowAddModal(false)}
-                  className="rounded-lg border border-gray-300 px-4 py-2 text-xs font-semibold text-gray-700 hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-gray-900"
+                  className="rounded-xl border border-gray-300 px-5 py-2.5 text-xs font-bold text-gray-700 hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-amber-500"
                 >
                   Cancel
                 </button>
                 <button
                   type="submit"
                   disabled={addingDish}
-                  className="rounded-lg bg-gray-900 px-4 py-2 text-xs font-semibold text-white hover:bg-gray-800 disabled:opacity-50 focus:outline-none focus:ring-2 focus:ring-gray-900 focus:ring-offset-2"
+                  className="rounded-xl bg-gray-950 px-5 py-2.5 text-xs font-bold text-white hover:bg-black disabled:opacity-50 focus:outline-none focus:ring-2 focus:ring-amber-500"
                 >
                   {addingDish ? 'Saving...' : 'Add to Menu'}
                 </button>
@@ -556,27 +540,27 @@ export default function MenuManagementPage() {
 
       {/* Scrape External Menu URL Modal */}
       {showScrapeModal && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 p-4" role="dialog" aria-modal="true" aria-labelledby="scrape-modal-title">
-          <div className="w-full max-w-lg rounded-2xl bg-white p-6 shadow-xl">
-            <div className="flex items-center justify-between border-b border-gray-100 pb-3 mb-4">
-              <h3 id="scrape-modal-title" className="text-lg font-bold text-gray-900">Scrape & Sync Menu from Web</h3>
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 p-4 backdrop-blur-xs" role="dialog" aria-modal="true" aria-labelledby="scrape-modal-title">
+          <div className="w-full max-w-lg rounded-3xl bg-white p-7 shadow-2xl border border-gray-200 animate-in zoom-in-95 duration-200">
+            <div className="flex items-center justify-between border-b border-gray-100 pb-4 mb-4">
+              <h3 id="scrape-modal-title" className="text-lg font-display font-extrabold text-gray-950">Scrape & Sync Menu from Web</h3>
               <button
                 type="button"
                 aria-label="Close sync modal"
                 onClick={() => setShowScrapeModal(false)}
-                className="text-gray-500 hover:text-gray-700 text-sm font-medium focus:outline-none focus:ring-2 focus:ring-gray-900 rounded p-1"
+                className="text-gray-400 hover:text-gray-700 text-sm font-bold focus:outline-none rounded p-1"
               >
                 ✕
               </button>
             </div>
 
-            <p className="text-xs text-gray-700 mb-4">
+            <p className="text-xs text-gray-600 mb-4 leading-relaxed">
               Provide a restaurant webpage URL. The scraper will extract items and prices, storing them into the live database.
             </p>
 
             <form onSubmit={handleScrapeMenu} className="space-y-4">
               <div>
-                <label htmlFor="scrape-target-url" className="block text-xs font-semibold text-gray-700 mb-1">Target Menu URL</label>
+                <label htmlFor="scrape-target-url" className="block text-xs font-bold uppercase tracking-wider text-gray-700 mb-1">Target Menu URL</label>
                 <input
                   id="scrape-target-url"
                   type="url"
@@ -584,28 +568,28 @@ export default function MenuManagementPage() {
                   value={scrapeUrl}
                   onChange={(e) => setScrapeUrl(e.target.value)}
                   placeholder="https://example-restaurant.com/menu"
-                  className="w-full rounded-lg border border-gray-300 px-3 py-2 text-sm text-gray-900 placeholder:text-gray-500 focus:border-gray-900 focus:ring-2 focus:ring-gray-900 focus:outline-none"
+                  className="w-full rounded-xl border border-gray-200 px-3.5 py-2.5 text-sm text-gray-900 placeholder:text-gray-400 focus:border-gray-950 focus:ring-2 focus:ring-gray-950 focus:outline-none bg-gray-50/50"
                 />
               </div>
 
               {scrapeFeedback && (
-                <div className="p-3 rounded-lg bg-gray-100 text-xs font-mono text-gray-900">
+                <div className="p-3.5 rounded-xl bg-gray-100 text-xs font-mono text-gray-900 border border-gray-200">
                   {scrapeFeedback}
                 </div>
               )}
 
-              <div className="flex justify-end gap-2 pt-4 border-t border-gray-100">
+              <div className="flex justify-end gap-3 pt-4 border-t border-gray-100">
                 <button
                   type="button"
                   onClick={() => setShowScrapeModal(false)}
-                  className="rounded-lg border border-gray-300 px-4 py-2 text-xs font-semibold text-gray-700 hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-gray-900"
+                  className="rounded-xl border border-gray-300 px-5 py-2.5 text-xs font-bold text-gray-700 hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-amber-500"
                 >
                   Cancel
                 </button>
                 <button
                   type="submit"
                   disabled={scraping}
-                  className="rounded-lg bg-blue-600 px-4 py-2 text-xs font-semibold text-white hover:bg-blue-700 disabled:opacity-50 focus:outline-none focus:ring-2 focus:ring-blue-600 focus:ring-offset-2"
+                  className="rounded-xl bg-sky-600 px-5 py-2.5 text-xs font-bold text-white hover:bg-sky-700 disabled:opacity-50 focus:outline-none focus:ring-2 focus:ring-sky-500"
                 >
                   {scraping ? 'Scraping...' : 'Start Extraction'}
                 </button>

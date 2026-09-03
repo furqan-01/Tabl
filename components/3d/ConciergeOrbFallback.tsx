@@ -10,7 +10,7 @@ export function OrbLoadingFallback() {
     <div
       id="orb-loading-fallback"
       role="status"
-      aria-label="Tabl AI Concierge Orb"
+      aria-label="Loading 3D AI Concierge Orb"
       className="w-full h-full flex items-center justify-center relative overflow-hidden rounded-full select-none"
     >
       {/* Outer ambient glow */}

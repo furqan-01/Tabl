@@ -5,9 +5,9 @@ import { getLiveRestaurantContext } from '@/lib/firebase/menuService';
 import { buildRestaurantKnowledgeBase } from '@/lib/ai/contextBuilder';
 import { queryMenu } from '@/lib/ai/tools';
 
+export const maxDuration = 30;
 export const dynamic = 'force-dynamic';
 export const runtime = 'nodejs';
-export const maxDuration = 60;
 
 export async function POST(req: NextRequest) {
   try {
