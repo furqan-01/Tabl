@@ -1,0 +1,90 @@
+{
+  "entities": {
+    "MenuItem": {
+      "title": "MenuItem",
+      "description": "Represents a dish or drink item available at the bistro.",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string", "maxLength": 128 },
+        "name": { "type": "string", "maxLength": 128 },
+        "category": { "type": "string", "maxLength": 64 },
+        "price": { "type": "number" },
+        "description": { "type": "string", "maxLength": 500 },
+        "ingredients": { "type": "array" },
+        "allergens": { "type": "array" },
+        "isVegetarian": { "type": "boolean" },
+        "isVegan": { "type": "boolean" },
+        "isGlutenFree": { "type": "boolean" },
+        "spiceLevel": { "type": "number" },
+        "isAvailable": { "type": "boolean" }
+      },
+      "required": ["name", "price", "category", "isAvailable"]
+    },
+    "DealOrPromotion": {
+      "title": "DealOrPromotion",
+      "description": "Special offers, combos, and time-limited promotions.",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string", "maxLength": 128 },
+        "title": { "type": "string", "maxLength": 128 },
+        "description": { "type": "string", "maxLength": 500 },
+        "discountedPrice": { "type": "number" },
+        "conditions": { "type": "string", "maxLength": 300 },
+        "isActive": { "type": "boolean" }
+      },
+      "required": ["title", "description", "isActive"]
+    },
+    "RestaurantInfo": {
+      "title": "RestaurantInfo",
+      "description": "Bistro metadata, operating hours, policies, and address.",
+      "type": "object",
+      "properties": {
+        "name": { "type": "string", "maxLength": 128 },
+        "openingHours": { "type": "string", "maxLength": 200 },
+        "orderingWorkflow": { "type": "string", "maxLength": 300 },
+        "tablePolicy": { "type": "string", "maxLength": 300 },
+        "currency": { "type": "string", "maxLength": 10 },
+        "address": { "type": "string", "maxLength": 300 },
+        "phone": { "type": "string", "maxLength": 50 }
+      },
+      "required": ["name", "openingHours", "orderingWorkflow", "tablePolicy"]
+    },
+    "OrderRecord": {
+      "title": "OrderRecord",
+      "description": "Customer table orders sent to the Kitchen Display System.",
+      "type": "object",
+      "properties": {
+        "tableNumber": { "type": "string", "maxLength": 32 },
+        "items": { "type": "array" },
+        "subtotal": { "type": "number" },
+        "tax": { "type": "number" },
+        "total": { "type": "number" },
+        "status": { "type": "string", "enum": ["pending", "preparing", "ready", "completed", "cancelled"] },
+        "paymentStatus": { "type": "string", "enum": ["pay-at-waiter", "paid", "unpaid"] },
+        "createdAt": { "type": "string", "maxLength": 64 },
+        "customerName": { "type": "string", "maxLength": 80 },
+        "customerPhone": { "type": "string", "maxLength": 30 },
+        "specialInstructions": { "type": "string", "maxLength": 300 }
+      },
+      "required": ["tableNumber", "items", "subtotal", "tax", "total", "status", "paymentStatus", "createdAt"]
+    }
+  },
+  "firestore": {
+    "/menu/{itemId}": {
+      "schema": "MenuItem",
+      "description": "Menu catalog items accessible to patrons for reading and managed by staff via secure API."
+    },
+    "/deals/{dealId}": {
+      "schema": "DealOrPromotion",
+      "description": "Active promotional deals and combo discounts."
+    },
+    "/settings/{settingId}": {
+      "schema": "RestaurantInfo",
+      "description": "Restaurant configuration, business hours, and operational policy."
+    },
+    "/orders/{orderId}": {
+      "schema": "OrderRecord",
+      "description": "Table orders managed strictly through server-side validated API endpoints."
+    }
+  }
+}

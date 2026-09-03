@@ -1,14 +1,27 @@
 import { NextRequest, NextResponse } from 'next/server';
 import * as cheerio from 'cheerio';
 import { getAdminDb } from '@/lib/firebase/admin';
+import { verifyAdminSession } from '@/lib/auth/adminAuth';
+import { validateUrlForSsrf } from '@/lib/security/ssrfGuard';
 import { MenuItem } from '@/types/restaurant';
 
 export async function POST(req: NextRequest) {
   try {
+    const auth = verifyAdminSession(req);
+    if (!auth.valid) {
+      return NextResponse.json(
+        {
+          success: false,
+          error: 'Unauthorized: Staff or Manager login required to import menus.',
+        },
+        { status: 401 }
+      );
+    }
+
     const body = await req.json();
     const { url } = body;
 
-    if (!url || typeof url !== 'string' || !url.startsWith('http')) {
+    if (!url || typeof url !== 'string') {
       return NextResponse.json(
         {
           success: false,
@@ -18,14 +31,27 @@ export async function POST(req: NextRequest) {
       );
     }
 
-    // Fetch the target webpage with realistic User-Agent and timeout
+    // SSRF Validation against private IPs, loopback, metadata, and unauthorized protocols
+    const ssrfCheck = await validateUrlForSsrf(url);
+    if (!ssrfCheck.valid || !ssrfCheck.url) {
+      return NextResponse.json(
+        {
+          success: false,
+          error: ssrfCheck.error || 'Invalid or forbidden URL destination.',
+        },
+        { status: 400 }
+      );
+    }
+
+    // Fetch the target webpage with realistic User-Agent, strict timeout, and manual redirect handling
     const controller = new AbortController();
-    const timeoutId = setTimeout(() => controller.abort(), 10000);
+    const timeoutId = setTimeout(() => controller.abort(), 8000);
 
     let html = '';
     try {
-      const response = await fetch(url, {
+      const response = await fetch(ssrfCheck.url.toString(), {
         signal: controller.signal,
+        redirect: 'error', // Disallow automated redirects to prevent SSRF redirect bypasses
         headers: {
           'User-Agent':
             'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36 TablMenuScraper/1.0',
@@ -44,6 +70,14 @@ export async function POST(req: NextRequest) {
       }
 
       html = await response.text();
+    } catch (fetchErr: any) {
+      return NextResponse.json(
+        {
+          success: false,
+          error: `Error connecting to target website: ${fetchErr.message}`,
+        },
+        { status: 422 }
+      );
     } finally {
       clearTimeout(timeoutId);
     }

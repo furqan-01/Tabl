@@ -1,37 +1,52 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { getFirebaseClientDb } from '@/lib/firebase/client';
-import { collection, doc, writeBatch, getDocs } from 'firebase/firestore';
+import { getAdminDb } from '@/lib/firebase/admin';
+import { verifyAdminSession } from '@/lib/auth/adminAuth';
 import { FALLBACK_MENU_ITEMS, FALLBACK_DEALS, FALLBACK_RESTAURANT_INFO } from '@/lib/firebase/menuService';
 
 export const dynamic = 'force-dynamic';
 
 export async function GET(req: NextRequest) {
-  return handleSeed();
+  return handleSeed(req);
 }
 
 export async function POST(req: NextRequest) {
-  return handleSeed();
+  return handleSeed(req);
 }
 
-async function handleSeed() {
+async function handleSeed(req: NextRequest) {
   try {
-    const db = getFirebaseClientDb();
-    const batch = writeBatch(db);
+    const auth = verifyAdminSession(req);
+    if (!auth.valid) {
+      return NextResponse.json(
+        { success: false, error: 'Unauthorized: Staff or Manager login required to seed the database.' },
+        { status: 401 }
+      );
+    }
+
+    const db = getAdminDb();
+    if (!db) {
+      return NextResponse.json(
+        { success: false, message: 'Firebase Admin not configured in environment.' },
+        { status: 503 }
+      );
+    }
+
+    const batch = db.batch();
 
     // 1. Seed Menu Items
     for (const item of FALLBACK_MENU_ITEMS) {
-      const docRef = doc(db, 'menu', item.id);
+      const docRef = db.collection('menu').doc(item.id);
       batch.set(docRef, item, { merge: true });
     }
 
     // 2. Seed Deals
     for (const deal of FALLBACK_DEALS) {
-      const docRef = doc(db, 'deals', deal.id);
+      const docRef = db.collection('deals').doc(deal.id);
       batch.set(docRef, deal, { merge: true });
     }
 
     // 3. Seed Restaurant Info
-    const infoRef = doc(db, 'settings', 'info');
+    const infoRef = db.collection('settings').doc('info');
     batch.set(infoRef, FALLBACK_RESTAURANT_INFO, { merge: true });
 
     await batch.commit();

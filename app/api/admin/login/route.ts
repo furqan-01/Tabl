@@ -1,4 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server';
+import { authenticateStaffCredentials, createAdminSessionToken } from '@/lib/auth/adminAuth';
 
 export const dynamic = 'force-dynamic';
 
@@ -7,46 +8,48 @@ export async function POST(req: NextRequest) {
     const body = await req.json();
     const { email, password, pin } = body;
 
-    // Standard demo staff credentials or configurable env
-    const ADMIN_EMAIL = process.env.ADMIN_EMAIL || 'admin@tabl.local';
-    const ADMIN_PASSWORD = process.env.ADMIN_PASSWORD || 'admin123';
-    const STAFF_PIN = process.env.STAFF_PIN || '1234';
+    const authResult = authenticateStaffCredentials(email, password, pin);
 
-    const normalizedEmail = String(email || '').trim().toLowerCase();
-    const cleanPassword = String(password || '').trim();
-    const cleanPin = String(pin || '').trim();
-
-    // Support both PIN authentication and Email/Password login
-    const isValidPin = cleanPin && (cleanPin === STAFF_PIN || cleanPin === '1234' || cleanPin === '9999');
-    const isValidEmailAuth =
-      normalizedEmail &&
-      cleanPassword &&
-      ((normalizedEmail === ADMIN_EMAIL.toLowerCase() && cleanPassword === ADMIN_PASSWORD) ||
-        (normalizedEmail.includes('tabl') && cleanPassword.length >= 4) ||
-        (cleanPassword === 'admin123' || cleanPassword === 'tabl2024' || cleanPassword === 'password'));
-
-    if (isValidPin || isValidEmailAuth) {
-      const user = {
-        name: isValidPin ? 'Kitchen / Floor Staff' : (normalizedEmail.split('@')[0] || 'Manager'),
-        email: normalizedEmail || 'staff@tabl.local',
-        role: normalizedEmail.includes('admin') || cleanPin === '9999' ? 'admin' : 'staff',
-        token: `tabl_token_${Date.now()}_${Math.random().toString(36).substring(2, 9)}`,
-      };
-
-      return NextResponse.json({
-        success: true,
-        message: 'Authentication successful',
-        user,
-      });
+    if (!authResult.success || !authResult.role || !authResult.userEmail) {
+      return NextResponse.json(
+        {
+          success: false,
+          error: authResult.error || 'Invalid credentials',
+        },
+        { status: 401 }
+      );
     }
 
-    return NextResponse.json(
-      {
-        success: false,
-        error: 'Invalid credentials. You can use demo login: admin@tabl.local / admin123 or PIN: 1234',
-      },
-      { status: 401 }
-    );
+    const token = createAdminSessionToken({
+      email: authResult.userEmail,
+      role: authResult.role,
+    });
+
+    const user = {
+      name: authResult.role === 'admin' ? 'Admin Manager' : 'Kitchen / Floor Staff',
+      email: authResult.userEmail,
+      role: authResult.role,
+      token,
+    };
+
+    const response = NextResponse.json({
+      success: true,
+      message: 'Authentication successful',
+      user,
+    });
+
+    // Set secure HTTP-only session cookie
+    response.cookies.set({
+      name: 'tabl_admin_session',
+      value: token,
+      httpOnly: true,
+      secure: process.env.NODE_ENV === 'production',
+      sameSite: 'lax',
+      path: '/',
+      maxAge: 60 * 60 * 24, // 24 hours
+    });
+
+    return response;
   } catch (error: any) {
     console.error('[API /api/admin/login] Error:', error);
     return NextResponse.json(

@@ -68,6 +68,19 @@ export default function MenuManagementPage() {
     fetchMenu();
   }, []);
 
+  const getAuthHeader = () => {
+    try {
+      const raw = localStorage.getItem('tabl_staff_auth');
+      if (raw) {
+        const user = JSON.parse(raw);
+        if (user?.token) {
+          return { Authorization: `Bearer ${user.token}` };
+        }
+      }
+    } catch {}
+    return {};
+  };
+
   const handleToggleAvailability = async (item: MenuItem) => {
     const updatedStatus = !item.isAvailable;
     setTogglingId(item.id);
@@ -80,19 +93,23 @@ export default function MenuManagementPage() {
     try {
       const res = await fetch(`/api/menu/${item.id}`, {
         method: 'PATCH',
-        headers: { 'Content-Type': 'application/json' },
+        headers: {
+          'Content-Type': 'application/json',
+          ...getAuthHeader(),
+        },
         body: JSON.stringify({ isAvailable: updatedStatus }),
       });
       if (!res.ok) {
-        throw new Error('Failed to update status on server');
+        const data = await res.json().catch(() => ({}));
+        throw new Error(data.error || 'Failed to update status on server');
       }
-    } catch (err) {
+    } catch (err: any) {
       console.error('Toggle error:', err);
       // Revert on error
       setItems((prev) =>
         prev.map((i) => (i.id === item.id ? { ...i, isAvailable: !updatedStatus } : i))
       );
-      alert('Could not update item availability. Please try again.');
+      alert(err.message || 'Could not update item availability. Please log in to staff portal.');
     } finally {
       setTogglingId(null);
     }
@@ -121,7 +138,10 @@ export default function MenuManagementPage() {
 
       const res = await fetch('/api/menu/add', {
         method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
+        headers: {
+          'Content-Type': 'application/json',
+          ...getAuthHeader(),
+        },
         body: JSON.stringify(newItem),
       });
 
@@ -141,7 +161,7 @@ export default function MenuManagementPage() {
       setNewDishVegan(false);
       setNewDishGlutenFree(false);
     } catch (err: any) {
-      alert(err.message || 'Failed to add dish');
+      alert(err.message || 'Failed to add dish. Please verify staff login.');
     } finally {
       setAddingDish(false);
     }
@@ -156,7 +176,10 @@ export default function MenuManagementPage() {
     try {
       const res = await fetch('/api/menu/scrape', {
         method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
+        headers: {
+          'Content-Type': 'application/json',
+          ...getAuthHeader(),
+        },
         body: JSON.stringify({ url: scrapeUrl.trim() }),
       });
 

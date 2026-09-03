@@ -23,9 +23,26 @@ export default function KitchenDisplaySystemPage() {
   const [updatingId, setUpdatingId] = useState<string | null>(null);
   const [autoRefresh, setAutoRefresh] = useState(true);
 
+  const getAuthHeader = useCallback(() => {
+    try {
+      const raw = localStorage.getItem('tabl_staff_auth');
+      if (raw) {
+        const user = JSON.parse(raw);
+        if (user?.token) {
+          return { Authorization: `Bearer ${user.token}` };
+        }
+      }
+    } catch {}
+    return {};
+  }, []);
+
   const fetchOrders = useCallback(async () => {
     try {
-      const res = await fetch('/api/orders');
+      const res = await fetch('/api/orders', {
+        headers: {
+          ...getAuthHeader(),
+        },
+      });
       const data = await res.json();
       if (data.orders) {
         setOrders(data.orders);
@@ -35,7 +52,7 @@ export default function KitchenDisplaySystemPage() {
     } finally {
       setLoading(false);
     }
-  }, []);
+  }, [getAuthHeader]);
 
   useEffect(() => {
     fetchOrders();
@@ -61,7 +78,10 @@ export default function KitchenDisplaySystemPage() {
     try {
       const res = await fetch(`/api/orders/${orderId}`, {
         method: 'PATCH',
-        headers: { 'Content-Type': 'application/json' },
+        headers: {
+          'Content-Type': 'application/json',
+          ...getAuthHeader(),
+        },
         body: JSON.stringify({ status: newStatus }),
       });
       if (!res.ok) {

@@ -1,8 +1,51 @@
 rules_version = '2';
 service cloud.firestore {
   match /databases/{database}/documents {
+
+    // 1. Global Default-Deny Catch-all
     match /{document=**} {
-      allow read, write: if true;
+      allow read, write: if false;
+    }
+
+    // Helper functions
+    function isValidId(id) {
+      return id is string && id.size() > 0 && id.size() <= 128 && id.matches('^[a-zA-Z0-9_\\-]+$');
+    }
+
+    function isSignedIn() {
+      return request.auth != null;
+    }
+
+    function isAdmin() {
+      return isSignedIn() && (
+        request.auth.token.email == 'furqannaveed377@gmail.com' ||
+        request.auth.token.email == 'admin@tabl.bistro'
+      );
+    }
+
+    // 2. Menu Catalog Collection: Public read access for customers; writes locked to server Admin SDK or verified Admins
+    match /menu/{itemId} {
+      allow get, list: if isValidId(itemId);
+      allow create, update, delete: if isAdmin();
+    }
+
+    // 3. Deals & Promotions Collection: Public read access; writes locked to verified Admins
+    match /deals/{dealId} {
+      allow get, list: if isValidId(dealId);
+      allow create, update, delete: if isAdmin();
+    }
+
+    // 4. Restaurant Settings & Info: Public read access; writes locked to verified Admins
+    match /settings/{settingId} {
+      allow get, list: if isValidId(settingId);
+      allow create, update, delete: if isAdmin();
+    }
+
+    // 5. Orders Collection: Strict zero-trust locking.
+    // Client-side writes and reads are blocked to prevent direct price tampering or eavesdropping on other tables.
+    // All order submissions and KDS updates are processed securely via the server-side Next.js API endpoints.
+    match /orders/{orderId} {
+      allow read, write: if isAdmin();
     }
   }
 }

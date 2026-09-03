@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { getAdminDb } from '@/lib/firebase/admin';
+import { verifyAdminSession } from '@/lib/auth/adminAuth';
 
 export const dynamic = 'force-dynamic';
 
@@ -8,6 +9,14 @@ export async function PATCH(
   { params }: { params: { id: string } }
 ) {
   try {
+    const auth = verifyAdminSession(req);
+    if (!auth.valid) {
+      return NextResponse.json(
+        { success: false, error: 'Unauthorized: Staff or Manager login required to modify menu items.' },
+        { status: 401 }
+      );
+    }
+
     const { id } = params;
     const body = await req.json();
 
@@ -56,6 +65,14 @@ export async function DELETE(
   { params }: { params: { id: string } }
 ) {
   try {
+    const auth = verifyAdminSession(req);
+    if (!auth.valid) {
+      return NextResponse.json(
+        { success: false, error: 'Unauthorized: Staff or Manager login required to delete menu items.' },
+        { status: 401 }
+      );
+    }
+
     const { id } = params;
     const db = getAdminDb();
 

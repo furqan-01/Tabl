@@ -38,13 +38,13 @@ export default function FloatingConciergeOrb({
   const [isHovered, setIsHovered] = useState(false);
   const [shouldLoad3D, setShouldLoad3D] = useState(false);
 
-  // Defer heavy 3D canvas loading until main thread is idle or user interacts
+  // Defer heavy 3D canvas loading until user interacts or main thread is genuinely idle (5s)
   useEffect(() => {
     if (typeof window !== 'undefined') {
       if ('requestIdleCallback' in window) {
         const handle = (window as any).requestIdleCallback(
           () => setShouldLoad3D(true),
-          { timeout: 2500 }
+          { timeout: 5000 }
         );
         return () => {
           if ('cancelIdleCallback' in window) {
@@ -52,7 +52,7 @@ export default function FloatingConciergeOrb({
           }
         };
       } else {
-        const timer = setTimeout(() => setShouldLoad3D(true), 1500);
+        const timer = setTimeout(() => setShouldLoad3D(true), 4000);
         return () => clearTimeout(timer);
       }
     }
