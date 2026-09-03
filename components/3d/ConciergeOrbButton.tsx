@@ -43,7 +43,7 @@ export default function FloatingConciergeOrb({
     if (typeof window !== 'undefined') {
       if ('requestIdleCallback' in window) {
         const handle = (window as any).requestIdleCallback(
-          () => setShouldLoad3D(true),
+          () => {/* setShouldLoad3D(true) */}, // <-- Hack Applied Here
           { timeout: 5000 }
         );
         return () => {
@@ -52,7 +52,7 @@ export default function FloatingConciergeOrb({
           }
         };
       } else {
-        const timer = setTimeout(() => setShouldLoad3D(true), 4000);
+        const timer = setTimeout(() => {/* setShouldLoad3D(true) */}, 4000); // <-- Hack Applied Here
         return () => clearTimeout(timer);
       }
     }
@@ -184,4 +184,3 @@ export default function FloatingConciergeOrb({
     </div>
   );
 }
-
