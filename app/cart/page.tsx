@@ -117,12 +117,12 @@ export default function CartPage() {
             Order Confirmed for Table {placedOrder.tableNumber}!
           </h1>
 
-          <p className="mt-2 text-sm text-gray-600 max-w-md mx-auto">
+          <p className="mt-2 text-sm text-gray-700 max-w-md mx-auto">
             Your ticket <span className="font-mono font-bold text-gray-900">#{placedOrder.id.slice(-6).toUpperCase()}</span> has been dispatched directly to the kitchen display.
           </p>
 
           <div className="mt-8 rounded-2xl bg-gray-50 p-6 text-left border border-gray-200/80">
-            <h2 className="text-xs font-bold uppercase tracking-wider text-gray-600 mb-4">
+            <h2 className="text-xs font-bold uppercase tracking-wider text-gray-700 mb-4">
               Order Summary
             </h2>
             <ul className="divide-y divide-gray-200">
@@ -166,9 +166,9 @@ export default function CartPage() {
             <Link
               href="/admin/kds"
               aria-label="View Kitchen Display Screen"
-              className="w-full sm:w-auto inline-flex items-center justify-center gap-2 rounded-xl border border-gray-300 bg-white px-6 py-3 text-xs font-bold text-gray-700 hover:bg-gray-50 transition-colors focus:outline-none focus:ring-2 focus:ring-gray-900 focus:ring-offset-2"
+              className="w-full sm:w-auto inline-flex items-center justify-center gap-2 rounded-xl border border-gray-300 bg-white px-6 py-3 text-xs font-bold text-gray-800 hover:bg-gray-50 transition-colors focus:outline-none focus:ring-2 focus:ring-gray-900 focus:ring-offset-2"
             >
-              <ChefHat className="w-4 h-4 text-orange-600" />
+              <ChefHat className="w-4 h-4 text-orange-700" />
               View Kitchen Screen (KDS)
             </Link>
           </div>
@@ -186,7 +186,7 @@ export default function CartPage() {
             <Link
               href="/menu"
               aria-label="Back to restaurant menu"
-              className="inline-flex items-center gap-1 text-xs font-semibold text-gray-600 hover:text-gray-900 focus:outline-none focus:ring-2 focus:ring-gray-900 rounded px-1"
+              className="inline-flex items-center gap-1 text-xs font-semibold text-gray-700 hover:text-gray-900 focus:outline-none focus:ring-2 focus:ring-gray-900 rounded px-1"
             >
               <ArrowLeft className="w-3.5 h-3.5" /> Back to Menu
             </Link>
@@ -198,7 +198,7 @@ export default function CartPage() {
 
         <div className="flex items-center gap-2">
           <div className="flex items-center gap-1.5 rounded-lg border border-gray-200 bg-white px-3 py-1.5 shadow-2xs">
-            <Utensils className="w-3.5 h-3.5 text-gray-600" />
+            <Utensils className="w-3.5 h-3.5 text-gray-700" />
             <label htmlFor="cart-table-select" className="text-xs font-semibold text-gray-700">
               Table:
             </label>
@@ -228,7 +228,7 @@ export default function CartPage() {
                 clearCart();
                 loadCart();
               }}
-              className="inline-flex items-center gap-1.5 rounded-lg border border-rose-200 bg-rose-50 px-3 py-1.5 text-xs font-semibold text-rose-700 hover:bg-rose-100 transition-colors focus:outline-none focus:ring-2 focus:ring-rose-500 focus:ring-offset-2"
+              className="inline-flex items-center gap-1.5 rounded-lg border border-rose-200 bg-rose-50 px-3 py-1.5 text-xs font-semibold text-rose-800 hover:bg-rose-100 transition-colors focus:outline-none focus:ring-2 focus:ring-rose-500 focus:ring-offset-2"
             >
               <Trash2 className="w-3.5 h-3.5" />
               Clear Cart
@@ -239,9 +239,9 @@ export default function CartPage() {
 
       {cart.length === 0 ? (
         <div className="rounded-3xl border border-dashed border-gray-300 bg-white p-12 text-center">
-          <ShoppingBag className="w-12 h-12 text-gray-400 mx-auto mb-3" />
+          <ShoppingBag className="w-12 h-12 text-gray-500 mx-auto mb-3" />
           <h2 className="text-lg font-bold text-gray-900">Your cart is empty</h2>
-          <p className="text-xs text-gray-600 mt-1 max-w-sm mx-auto">
+          <p className="text-xs text-gray-700 mt-1 max-w-sm mx-auto">
             Browse our menu or consult the AI Assistant for recommendations and add items to your table order.
           </p>
           <Link
@@ -271,12 +271,12 @@ export default function CartPage() {
                     <div className="flex-1">
                       <div className="flex items-center justify-between sm:justify-start gap-2">
                         <h3 className="font-bold text-gray-900 text-sm">{item.name}</h3>
-                        <span className="font-mono text-xs font-semibold text-gray-600">
+                        <span className="font-mono text-xs font-semibold text-gray-700">
                           Rs. {item.price} each
                         </span>
                       </div>
                       {item.notes && (
-                        <p className="text-xs text-amber-800 bg-amber-50 rounded px-2 py-0.5 mt-1 inline-block">
+                        <p className="text-xs text-amber-900 bg-amber-50 rounded px-2 py-0.5 mt-1 inline-block">
                           Note: {item.notes}
                         </p>
                       )}
@@ -316,7 +316,7 @@ export default function CartPage() {
                         type="button"
                         aria-label={`Remove ${item.name} from cart`}
                         onClick={() => handleRemove(item.id)}
-                        className="p-1.5 text-gray-500 hover:text-rose-600 transition-colors focus:outline-none focus:ring-2 focus:ring-rose-500 rounded"
+                        className="p-1.5 text-gray-700 hover:text-rose-700 transition-colors focus:outline-none focus:ring-2 focus:ring-rose-500 rounded"
                         title="Remove item"
                       >
                         <Trash2 className="w-4 h-4" />

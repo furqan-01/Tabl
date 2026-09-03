@@ -1,6 +1,7 @@
 'use client';
 
 import React, { useState, useEffect, useCallback } from 'react';
+import dynamic from 'next/dynamic';
 import Link from 'next/link';
 import {
   Sparkles,
@@ -23,11 +24,25 @@ import {
   RefreshCw,
 } from 'lucide-react';
 import { MenuItem, DealOrPromotion, RestaurantInfo } from '@/types/restaurant';
-import ChatContainer from '@/components/chat/ChatContainer';
 import FloatingConciergeOrb from '@/components/3d/ConciergeOrbButton';
 import { addToCart, getStoredCart, getStoredTable, setStoredTable } from '@/lib/cart';
 
+// Dynamically import ChatContainer with a lightweight skeleton to keep initial JS bundle minimal
+const ChatContainer = dynamic(
+  () => import('@/components/chat/ChatContainer'),
+  {
+    ssr: false,
+    loading: () => (
+      <div className="flex-1 flex flex-col items-center justify-center p-8 text-center space-y-4">
+        <div className="w-10 h-10 border-4 border-gray-900 border-t-transparent rounded-full animate-spin" />
+        <p className="text-xs font-semibold text-gray-800">Connecting to Tabl AI Concierge...</p>
+      </div>
+    ),
+  }
+);
+
 export default function MenuPage() {
+
   const [items, setItems] = useState<MenuItem[]>([]);
   const [deals, setDeals] = useState<DealOrPromotion[]>([]);
   const [info, setInfo] = useState<RestaurantInfo | null>(null);
@@ -444,18 +459,18 @@ export default function MenuPage() {
                       {/* Top Meta & Badges */}
                       <div>
                         <div className="flex items-start justify-between gap-2 mb-2">
-                          <span className="text-xs font-semibold text-gray-600 uppercase tracking-wider">
+                          <span className="text-xs font-semibold text-gray-700 uppercase tracking-wider">
                             {item.category}
                           </span>
 
                           {/* Availability Badge */}
                           {item.isAvailable ? (
                             <span className="inline-flex items-center gap-1 rounded-full bg-emerald-50 px-2 py-0.5 text-xs font-semibold text-emerald-800 ring-1 ring-emerald-600/20">
-                              <CheckCircle2 className="w-3 h-3 text-emerald-600" /> In Stock
+                              <CheckCircle2 className="w-3 h-3 text-emerald-700" /> In Stock
                             </span>
                           ) : (
                             <span className="inline-flex items-center gap-1 rounded-full bg-rose-50 px-2 py-0.5 text-xs font-semibold text-rose-800 ring-1 ring-rose-600/20">
-                              <XCircle className="w-3 h-3 text-rose-600" /> 86&apos;d / Out
+                              <XCircle className="w-3 h-3 text-rose-700" /> 86&apos;d / Out
                             </span>
                           )}
                         </div>
@@ -470,7 +485,7 @@ export default function MenuPage() {
 
                         {/* Description */}
                         {item.description && (
-                          <p className="text-xs text-gray-600 leading-relaxed line-clamp-2 mb-3">
+                          <p className="text-xs text-gray-700 leading-relaxed line-clamp-2 mb-3">
                             {item.description}
                           </p>
                         )}
@@ -494,12 +509,12 @@ export default function MenuPage() {
                           )}
                           {item.spiceLevel ? (
                             <span className="text-xs font-semibold bg-red-50 text-red-800 border border-red-300 px-1.5 py-0.5 rounded flex items-center gap-0.5">
-                              <Flame className="w-3 h-3 text-red-600 fill-current" />
+                              <Flame className="w-3 h-3 text-red-700 fill-current" />
                               Spice {item.spiceLevel}
                             </span>
                           ) : null}
                           {item.allergens && item.allergens.length > 0 && (
-                            <span className="text-xs text-gray-600 bg-gray-100 px-1.5 py-0.5 rounded">
+                            <span className="text-xs font-medium text-gray-800 bg-gray-100 px-1.5 py-0.5 rounded">
                               Contains: {item.allergens.join(', ')}
                             </span>
                           )}
@@ -557,7 +572,7 @@ export default function MenuPage() {
                             </button>
                           </>
                         ) : (
-                          <div className="w-full text-center py-2 text-xs font-semibold text-rose-700 bg-rose-50/80 rounded-lg border border-rose-100">
+                          <div className="w-full text-center py-2 text-xs font-semibold text-rose-800 bg-rose-50 rounded-lg border border-rose-200">
                             Currently Unavailable
                           </div>
                         )}

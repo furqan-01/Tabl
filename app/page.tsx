@@ -17,7 +17,7 @@ export default function HomePage() {
       {/* Hero Section */}
       <div className="text-center max-w-3xl mx-auto space-y-6">
         <div className="inline-flex items-center gap-2 rounded-full border border-gray-200 bg-white px-3.5 py-1 text-xs font-semibold text-gray-800 shadow-2xs">
-          <Sparkles className="w-3.5 h-3.5 text-amber-500" />
+          <Sparkles className="w-3.5 h-3.5 text-amber-600" />
           <span>Smart Menu & Contactless Table Ordering System</span>
         </div>
 
@@ -26,7 +26,7 @@ export default function HomePage() {
           Powered by Real-Time AI.
         </h1>
 
-        <p className="text-base sm:text-lg text-gray-600 leading-relaxed">
+        <p className="text-base sm:text-lg text-gray-700 leading-relaxed">
           Browse live inventory, get instant dietary recommendations and budget meal plans with our AI Menu Assistant, and order directly from your table with zero app downloads.
         </p>
 
@@ -49,7 +49,7 @@ export default function HomePage() {
             aria-label="Open Kitchen Display System"
             className="w-full sm:w-auto inline-flex items-center justify-center gap-2 rounded-xl border border-gray-300 bg-white px-6 py-3.5 text-sm font-bold text-gray-800 hover:bg-gray-50 transition-colors shadow-2xs focus:outline-none focus:ring-2 focus:ring-gray-900 focus:ring-offset-2"
           >
-            <ChefHat className="w-4 h-4 text-orange-600" />
+            <ChefHat className="w-4 h-4 text-orange-700" />
             Kitchen Display (KDS)
           </Link>
         </div>
@@ -60,11 +60,11 @@ export default function HomePage() {
         {/* Feature 1 */}
         <div className="rounded-2xl border border-gray-200 bg-white p-6 shadow-xs flex flex-col justify-between">
           <div>
-            <div className="w-10 h-10 rounded-xl bg-amber-50 text-amber-600 flex items-center justify-center mb-4">
+            <div className="w-10 h-10 rounded-xl bg-amber-50 text-amber-700 flex items-center justify-center mb-4">
               <Sparkles className="w-5 h-5" />
             </div>
             <h3 className="text-base font-bold text-gray-900">AI Concierge & Dietary Guide</h3>
-            <p className="text-xs text-gray-600 mt-2 leading-relaxed">
+            <p className="text-xs text-gray-700 mt-2 leading-relaxed">
               Real-time streaming assistant aware of live ingredients, allergen profiles, 86 statuses, and customized budget combos.
             </p>
           </div>
@@ -80,11 +80,11 @@ export default function HomePage() {
         {/* Feature 2 */}
         <div className="rounded-2xl border border-gray-200 bg-white p-6 shadow-xs flex flex-col justify-between">
           <div>
-            <div className="w-10 h-10 rounded-xl bg-orange-50 text-orange-600 flex items-center justify-center mb-4">
+            <div className="w-10 h-10 rounded-xl bg-orange-50 text-orange-700 flex items-center justify-center mb-4">
               <ChefHat className="w-5 h-5" />
             </div>
             <h3 className="text-base font-bold text-gray-900">Live Kitchen Queue (KDS)</h3>
-            <p className="text-xs text-gray-600 mt-2 leading-relaxed">
+            <p className="text-xs text-gray-700 mt-2 leading-relaxed">
               Incoming table orders appear instantly on kitchen screens with stage controls from prep to ready-to-serve.
             </p>
           </div>
@@ -100,11 +100,11 @@ export default function HomePage() {
         {/* Feature 3 */}
         <div className="rounded-2xl border border-gray-200 bg-white p-6 shadow-xs flex flex-col justify-between">
           <div>
-            <div className="w-10 h-10 rounded-xl bg-indigo-50 text-indigo-600 flex items-center justify-center mb-4">
+            <div className="w-10 h-10 rounded-xl bg-indigo-50 text-indigo-700 flex items-center justify-center mb-4">
               <Layers className="w-5 h-5" />
             </div>
             <h3 className="text-base font-bold text-gray-900">Instant 86 & Menu Manager</h3>
-            <p className="text-xs text-gray-600 mt-2 leading-relaxed">
+            <p className="text-xs text-gray-700 mt-2 leading-relaxed">
               Staff can mark items out of stock with one click, immediately updating both customer menus and AI recommendations.
             </p>
           </div>

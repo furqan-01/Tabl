@@ -1,10 +1,10 @@
 'use client';
 
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import dynamic from 'next/dynamic';
 import { OrbLoadingFallback } from './ConciergeOrbFallback';
 
-// Dynamically import the 3D Canvas component to prevent Next.js SSR prerender issues
+// Dynamically import the 3D Canvas component
 const DynamicConciergeOrbCanvas = dynamic(
   () => import('./ConciergeOrbCanvas'),
   {
@@ -24,11 +24,9 @@ export interface FloatingConciergeOrbProps {
 }
 
 /**
- * 3D AI Concierge Orb Button Component
- * Supports:
- * - 'floating': Floating Action Button positioned in the bottom right of the viewport/content
- * - 'inline': Embedded directly in banners or cards
- * - 'compact': Small interactive orb for navigation headers
+ * High-Performance 3D AI Concierge Orb Button
+ * Defers WebGL shader/canvas initialization until after page hydration and idle
+ * to protect First Contentful Paint, Time to Interactive, and Total Blocking Time.
  */
 export default function FloatingConciergeOrb({
   onClick,
@@ -38,6 +36,32 @@ export default function FloatingConciergeOrb({
   variant = 'floating',
 }: FloatingConciergeOrbProps) {
   const [isHovered, setIsHovered] = useState(false);
+  const [shouldLoad3D, setShouldLoad3D] = useState(false);
+
+  // Defer heavy 3D canvas loading until main thread is idle or user interacts
+  useEffect(() => {
+    if (typeof window !== 'undefined') {
+      if ('requestIdleCallback' in window) {
+        const handle = (window as any).requestIdleCallback(
+          () => setShouldLoad3D(true),
+          { timeout: 2500 }
+        );
+        return () => {
+          if ('cancelIdleCallback' in window) {
+            (window as any).cancelIdleCallback(handle);
+          }
+        };
+      } else {
+        const timer = setTimeout(() => setShouldLoad3D(true), 1500);
+        return () => clearTimeout(timer);
+      }
+    }
+  }, []);
+
+  const handleInteraction = () => {
+    if (!shouldLoad3D) setShouldLoad3D(true);
+    setIsHovered(true);
+  };
 
   // Compact Header / Inline Variant
   if (variant === 'compact') {
@@ -47,16 +71,20 @@ export default function FloatingConciergeOrb({
         id="compact-3d-concierge-btn"
         aria-label={`Open ${label}`}
         onClick={onClick}
-        onMouseEnter={() => setIsHovered(true)}
+        onMouseEnter={handleInteraction}
         onMouseLeave={() => setIsHovered(false)}
         className={`group inline-flex items-center gap-2 rounded-xl bg-slate-900 px-3 py-1.5 text-xs font-bold text-white shadow-md hover:bg-slate-800 transition-all hover:scale-105 active:scale-95 border border-slate-700 ${className}`}
       >
         <div className="w-7 h-7 relative flex-shrink-0">
-          <DynamicConciergeOrbCanvas
-            isHovered={isHovered}
-            onClick={onClick}
-            onHoverChange={setIsHovered}
-          />
+          {shouldLoad3D ? (
+            <DynamicConciergeOrbCanvas
+              isHovered={isHovered}
+              onClick={onClick}
+              onHoverChange={setIsHovered}
+            />
+          ) : (
+            <OrbLoadingFallback />
+          )}
         </div>
         <span>{label}</span>
         {showBadge && (
@@ -66,22 +94,26 @@ export default function FloatingConciergeOrb({
     );
   }
 
-  // Inline Banner Variant (e.g. inside Recommendation Banner)
+  // Inline Banner Variant
   if (variant === 'inline') {
     return (
       <div
         id="inline-3d-concierge-wrapper"
         className={`relative flex items-center gap-3 cursor-pointer ${className}`}
         onClick={onClick}
-        onMouseEnter={() => setIsHovered(true)}
+        onMouseEnter={handleInteraction}
         onMouseLeave={() => setIsHovered(false)}
       >
         <div className="w-16 h-16 sm:w-20 sm:h-20 relative flex-shrink-0">
-          <DynamicConciergeOrbCanvas
-            isHovered={isHovered}
-            onClick={onClick}
-            onHoverChange={setIsHovered}
-          />
+          {shouldLoad3D ? (
+            <DynamicConciergeOrbCanvas
+              isHovered={isHovered}
+              onClick={onClick}
+              onHoverChange={setIsHovered}
+            />
+          ) : (
+            <OrbLoadingFallback />
+          )}
         </div>
       </div>
     );
@@ -99,7 +131,7 @@ export default function FloatingConciergeOrb({
         id="floating-3d-concierge-btn"
         aria-label={`Open ${label}`}
         onClick={onClick}
-        onMouseEnter={() => setIsHovered(true)}
+        onMouseEnter={handleInteraction}
         onMouseLeave={() => setIsHovered(false)}
         className="group relative flex items-center justify-center w-20 h-20 sm:w-24 sm:h-24 rounded-full transition-transform duration-300 hover:scale-110 active:scale-95 focus:outline-none focus-visible:ring-4 focus-visible:ring-amber-400 shadow-2xl bg-slate-950/80 backdrop-blur-md border border-slate-700/60"
       >
@@ -110,13 +142,17 @@ export default function FloatingConciergeOrb({
           }`}
         />
 
-        {/* 3D WebGL Canvas */}
+        {/* 3D WebGL Canvas or Instant Animated Fallback */}
         <div className="w-full h-full relative cursor-pointer">
-          <DynamicConciergeOrbCanvas
-            isHovered={isHovered}
-            onClick={onClick}
-            onHoverChange={setIsHovered}
-          />
+          {shouldLoad3D ? (
+            <DynamicConciergeOrbCanvas
+              isHovered={isHovered}
+              onClick={onClick}
+              onHoverChange={setIsHovered}
+            />
+          ) : (
+            <OrbLoadingFallback />
+          )}
         </div>
 
         {/* Pulse Status Indicator Badge */}
@@ -137,7 +173,7 @@ export default function FloatingConciergeOrb({
           type="button"
           id="floating-3d-concierge-pill"
           onClick={onClick}
-          onMouseEnter={() => setIsHovered(true)}
+          onMouseEnter={handleInteraction}
           onMouseLeave={() => setIsHovered(false)}
           className="inline-flex items-center gap-2 rounded-full bg-slate-900/95 hover:bg-slate-900 text-white backdrop-blur-md px-4 py-2.5 text-xs font-bold shadow-xl border border-slate-700 transition-all duration-200 hover:border-amber-400 hover:shadow-amber-500/20 active:scale-95"
         >
@@ -148,3 +184,4 @@ export default function FloatingConciergeOrb({
     </div>
   );
 }
+
