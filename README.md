@@ -1,6 +1,6 @@
 # Tabl Modern Bistro 🍽️✨
 
-**Live Production URL:** [🔗 Insert Your Netlify/Vercel Link Here]
+**Live Production URL: https://tabl-flyrank.netlify.app/
 
 Tabl is a next-generation contactless dining application featuring real-time menu management, a Kitchen Display System (KDS), and an interactive 3D AI Gastronomy Concierge powered by Gemini.
 
