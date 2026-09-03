@@ -38,6 +38,6 @@ AI was heavily utilized to accelerate development, but guided by strict architec
 
 ### 1. Clone the repository
 ```bash
-git clone https://github.com/yourusername/tabl-bistro.git
-cd tabl-bistro
+git clone https://github.com/furqan-01/Tabl.git
+cd Tabl
 ```
