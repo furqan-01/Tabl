@@ -442,7 +442,7 @@ export default function MenuPage() {
                 id="menu-items-grid"
                 className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6"
               >
-               {filteredItems.slice(0, 3).map((item) => { 
+               {filteredItems.map((item) => { 
                   const qty = getItemQuantity(item.id);
                   const isJustAdded = justAddedId === item.id;
 
